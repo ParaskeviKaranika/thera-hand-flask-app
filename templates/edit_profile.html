@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ session.get('lang', 'el') }}">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <title>{{ t('edit_profile_title') }}</title>
+    <title>{{ t.get('edit_profile_title', 'Edit profile') }}</title>
 
     <link rel="stylesheet" href="/static/profile.css">
 </head>
@@ -14,7 +13,7 @@
         <h2>{{ t.get('edit_profile_title', 'Edit profile') }}</h2>
 
         <form method="POST">
-            <label for="new_username">{{ t('new_username') }}</label>
+            <label for="new_username">{{ t.get('new_username', 'New username') }}</label>
             <input
                 type="text"
                 id="new_username"
@@ -24,7 +23,7 @@
             >
 
             <button type="submit">
-                {{ t('save_changes') }}
+                {{ t.get('save_changes', 'Save changes') }}
             </button>
         </form>
 
@@ -32,7 +31,7 @@
             href="{{ url_for('profile', username=session['username']) }}"
             class="back-btn"
         >
-            {{ t('back_to_profile') }}
+            {{ t.get('back_to_profile', 'Back to profile') }}
         </a>
     </div>
 
