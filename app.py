@@ -113,6 +113,10 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 # Render μερικές φορές δίνει postgres://, το κάνουμε postgresql://
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+# ✅ force sslmode=require αν δεν υπάρχει ήδη
+if "sslmode=" not in DATABASE_URL:
+    sep = "&" if "?" in DATABASE_URL else "?"
+    DATABASE_URL = DATABASE_URL + f"{sep}sslmode=require"
 
 class TranslatingCursor:
     """
@@ -154,9 +158,9 @@ class PostgresConnection:
         self._conn = None
 
     def _connect(self):
-        if self._conn is None or self._conn.closed != 0:
-            self._conn = psycopg2.connect(self.dsn)
-        return self._conn
+     self._conn = psycopg2.connect(self.dsn)
+     return self._conn
+
 
     def cursor(self, cursorclass=None):
         conn = self._connect()
