@@ -749,7 +749,8 @@ def check_user():
                 mysql.connection.commit()
 
             cursor.close()
-            return "menu" if user.get('profile_completed') == 1 else "steps"
+            return "menu" if user.get('profile_completed') else "steps"
+
 
         cursor.close()
         return "Λάθος κωδικός!", 401
@@ -873,7 +874,8 @@ def complete_profile():
     cursor = mysql.connection.cursor()
     cursor.execute("""
         UPDATE users 
-        SET profile_completed = 1,
+        SET profile_completed = TRUE,
+,
             stage = %s,
             type = %s,
             frequency = %s,
