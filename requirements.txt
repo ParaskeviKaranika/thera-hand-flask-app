@@ -1,28 +1,15 @@
 Flask==3.0.0
 gunicorn==21.2.0
 
-# MySQL / MariaDB (cloud safe)
-PyMySQL==1.1.0
-Flask-MySQLdb==2.0.0
+# PostgreSQL
+psycopg2-binary==2.9.9
 
-# Password hashing
 bcrypt==4.1.2
 
-# Email
 Flask-Mail==0.9.1
-
-# Scheduler
 APScheduler==3.10.4
-
-# Timezones
 pytz==2024.1
-
-# Tokens / Security
 itsdangerous==2.1.2
-
-# File uploads / utils
 Werkzeug==3.0.1
-
-# PDF generation
 reportlab==4.0.9
 python-dotenv==1.0.1
