@@ -1065,6 +1065,11 @@ def start_exercise(exercise_num):
     if lang not in ("el", "en"):
         lang = "el"
 
+    # ✅ Κρατάμε ό,τι έχεις για dashboard/stats/DB (ΔΕΝ ΣΒΗΝΟΥΜΕ ΤΙΠΟΤΑ)
+    # Απλά αποθηκεύουμε age/lang στο session για να μπορεί να τα διαβάσει το JS game αν θέλει
+    session["age"] = age
+    session["lang"] = lang
+
     game_paths = {
         1: os.path.join(BASE_GAME_FOLDER, "first_game", "first_game.py"),
         2: os.path.join(BASE_GAME_FOLDER, "second_game", "second_game_shape_moving.py"),
@@ -1078,12 +1083,23 @@ def start_exercise(exercise_num):
         print("❌ Δεν βρέθηκε αρχείο για άσκηση:", exercise_num)
         return f"Το παιχνίδι {exercise_num} δεν βρέθηκε.", 404
 
+    # ✅ ΠΡΟΣΘΗΚΗ: Αν τρέχεις σε Render/production, ΜΗΝ κάνεις subprocess (ρίχνει gunicorn worker).
+    # Αντί γι' αυτό, φόρτωσε το web παιχνίδι (HTML/JS) που ήδη παίζει στο κινητό.
+    IS_RENDER = bool(os.environ.get("RENDER"))  # στο Render είναι συνήθως set
+    IS_PROD = (os.environ.get("ENV") == "production")  # αν θες βάλε ENV=production στο Render
+
+    if IS_RENDER or IS_PROD:
+        # ✅ Δεν πειράζει dashboard/stats: το JS σου θα στείλει /add_stat και μετά μπορεί να πάει /dashboard
+        return redirect(url_for("play_exercise", ex_id=exercise_num))
+
+    # ✅ Local mode: κρατάς την παλιά συμπεριφορά σου (python scripts)
     try:
         subprocess.Popen(["python", game_path, username, str(age), lang])
         print(f"🎮 Εκκίνηση {os.path.basename(game_path)} για {username} ({age} ετών)")
     except Exception:
         app.logger.exception("⚠️ Σφάλμα εκτέλεσης παιχνιδιού")
 
+    # όπως πριν
     return redirect(url_for("dashboard"))
 
 
