@@ -875,7 +875,7 @@ def complete_profile():
     cursor.execute("""
         UPDATE users 
         SET profile_completed = TRUE,
-,
+
             stage = %s,
             type = %s,
             frequency = %s,
