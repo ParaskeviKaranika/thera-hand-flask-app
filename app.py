@@ -68,9 +68,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Settings Email (μέσω Gmail)
 # -------------------------------------------------------------------
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USE_TLS'] = True
 
 app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
@@ -753,8 +753,13 @@ def check_user():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # 1) Ψάξε πρώτα με email (πιο σωστό για login)
-    cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+    # 1) Login lookup: με email ή με username
+    cursor.execute(
+    "SELECT * FROM users WHERE email=%s OR username=%s",
+    (email, username)
+)
     user = cursor.fetchone()
+
 
     # ------------------------
     # ✅ LOGIN (υπάρχει user με αυτό το email)
@@ -791,11 +796,20 @@ def check_user():
     # ------------------------
 
     # 2) Μην αφήνεις ίδιο username να ξαναγραφτεί
+    # ✅ Αν υπάρχει ήδη email
+    cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
+    existing_email = cursor.fetchone()
+    if existing_email:
+      cursor.close()
+      return "Το email υπάρχει ήδη!", 409
+
+
     cursor.execute("SELECT id FROM users WHERE username=%s", (username,))
     existing_username = cursor.fetchone()
     if existing_username:
-        cursor.close()
-        return "Το username υπάρχει ήδη!", 409
+       cursor.close()
+       return "Το username υπάρχει ήδη!", 409
+
 
     # 3) Hash password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
