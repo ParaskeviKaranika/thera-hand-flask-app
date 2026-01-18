@@ -676,6 +676,11 @@ body.dark-mode .bottom-navbar .nav-item img{ filter: invert(1) brightness(1.15) 
 
 
 .bottom-navbar .nav-item.active{ background: transparent !important; }
+/* Remove underline from ALL links */
+a, a:visited, a:hover, a:active {
+  text-decoration: none !important;
+}
+
 
 @media (max-width: 480px) {
   .bot-window {
