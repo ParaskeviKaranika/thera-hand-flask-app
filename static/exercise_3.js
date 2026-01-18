@@ -1,7 +1,4 @@
-(() => {
-  // ==============================
-  // DOM references
-  // ==============================
+ (() => {
   const statusEl = document.getElementById("status");
   const startBtn = document.getElementById("startBtn");
   const restartBtn = document.getElementById("restartBtn");
@@ -10,17 +7,12 @@
   const ctx = canvas.getContext("2d");
   const video = document.getElementById("cam");
 
-  // User/session data passed from Flask
   const username = document.body.dataset.username || "Guest";
   const age = parseInt(document.body.dataset.age || "0", 10);
 
-  // ==============================
-  // i18n (translations injected via HTML)
-  // ==============================
+  // ✅ i18n from translations.py via HTML
   const i18nEl = document.getElementById("i18n");
   const TT = i18nEl ? JSON.parse(i18nEl.textContent || "{}") : {};
-
-  // Translation helper with variable replacement
   const tr = (key, vars = {}) => {
     let s = TT[key] || key;
     for (const [k, v] of Object.entries(vars)) {
@@ -29,28 +21,19 @@
     return s;
   };
 
-  // ==============================
-  // Canvas & grid geometry
-  // ==============================
   const W = canvas.width;
   const H = canvas.height;
 
-  const GAME_SIZE = 4;        // 4x4 sliding puzzle
-  const TILESIZE = 100;       // tile size in pixels
+  const GAME_SIZE = 4;
+  const TILESIZE = 100;
 
-  const gridW = GAME_SIZE * TILESIZE;
-  const gridH = GAME_SIZE * TILESIZE;
-
-  // Center grid inside canvas
+  const gridW = GAME_SIZE * TILESIZE; // 400
+  const gridH = GAME_SIZE * TILESIZE; // 400
   const offsetX = Math.floor((W - gridW) / 2);
   const offsetY = Math.floor((H - gridH) / 4);
 
-  // Score targets per level
   const LEVEL_GOALS = [5, 10, 15];
 
-  // ==============================
-  // Game state
-  // ==============================
   let running = false;
   let stream = null;
 
@@ -63,46 +46,30 @@
 
   let targetPos = null;
   let sentOnce = false;
+  let gameState = "instructions"; // instructions | playing | between | done
 
-  // instructions | playing | between | done
-  let gameState = "instructions";
-
-  // ==============================
-  // Hand / gesture state
-  // ==============================
+  // hand
   let pinch = false;
-  let prevPinch = false;   // edge-trigger detection
+  let prevPinch = false; // ✅ edge trigger
   let fingerX = 0;
   let fingerY = 0;
-  let lastMoveAt = 0;      // debounce timer
+  let lastMoveAt = 0;
 
-  // ==============================
-  // Sound (played on successful move)
-  // ==============================
+  // ✅ sound (Solution B)
   const successAudio = new Audio("/assets/third_game/success.wav");
   successAudio.preload = "auto";
 
-  // ==============================
-  // Utility helpers
-  // ==============================
-  function nowSec() {
-    return (Date.now() - startTime) / 1000;
-  }
+  function nowSec() { return (Date.now() - startTime) / 1000; }
+  function clone2D(a) { return a.map(r => r.slice()); }
 
-  function clone2D(a) {
-    return a.map(r => r.slice());
-  }
-
-  // ==============================
-  // Board creation & logic
-  // ==============================
   function makeSolvedBoard() {
     const b = [];
     let v = 1;
     for (let r = 0; r < GAME_SIZE; r++) {
       b.push([]);
       for (let c = 0; c < GAME_SIZE; c++) {
-        b[r][c] = (r === GAME_SIZE - 1 && c === GAME_SIZE - 1) ? 0 : v++;
+        if (r === GAME_SIZE - 1 && c === GAME_SIZE - 1) b[r][c] = 0;
+        else b[r][c] = v++;
       }
     }
     return b;
@@ -117,7 +84,6 @@
     return null;
   }
 
-  // Adjacent positions (up/down/left/right)
   function neighbors(pos) {
     const out = [];
     const { r, c } = pos;
@@ -128,7 +94,6 @@
     return out;
   }
 
-  // Shuffle using valid moves only (always solvable)
   function shuffleBoardValidMoves(times = 40) {
     board = clone2D(makeSolvedBoard());
     for (let i = 0; i < times; i++) {
@@ -141,16 +106,13 @@
     }
   }
 
-  // Pick a random tile adjacent to empty as the target
   function pickNewTarget() {
     const empty = findEmpty();
     const opts = neighbors(empty).filter(p => board[p.r][p.c] !== 0);
-    targetPos = opts.length ? opts[Math.floor(Math.random() * opts.length)] : null;
+    if (opts.length === 0) { targetPos = null; return; }
+    targetPos = opts[Math.floor(Math.random() * opts.length)];
   }
 
-  // ==============================
-  // Level & game resets
-  // ==============================
   function resetLevel() {
     shuffleBoardValidMoves(50);
     pickNewTarget();
@@ -167,9 +129,6 @@
     resetLevel();
   }
 
-  // ==============================
-  // Coordinate helpers
-  // ==============================
   function tileAtPixel(px, py) {
     const tx = Math.floor((px - offsetX) / TILESIZE);
     const ty = Math.floor((py - offsetY) / TILESIZE);
@@ -187,20 +146,222 @@
     const tmp = board[pos.r][pos.c];
     board[pos.r][pos.c] = 0;
     board[empty.r][empty.c] = tmp;
-    moves++;
+    moves += 1;
   }
 
-  // ==============================
-  // Rendering helpers
-  // ==============================
-  // (Camera background, grid, tiles, HUD, overlays, etc.)
-  // These functions ONLY draw – no game logic inside.
+  // ---------- Rendering ----------
+  function drawCameraBackground() {
+    if (running && video.videoWidth > 0 && video.videoHeight > 0) {
+      ctx.save();
+      ctx.translate(W, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, W, H);
+      ctx.restore();
+    } else {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, W, H);
+    }
+  }
 
-  // ... (drawing functions unchanged, comments omitted for brevity)
+  function drawGridOverlay() {
+    ctx.fillStyle = "rgba(40,40,40,0.40)";
+    ctx.fillRect(offsetX, offsetY, gridW, gridH);
 
-  // ==============================
-  // Game progression
-  // ==============================
+    ctx.strokeStyle = "rgba(230,230,230,0.7)";
+    ctx.lineWidth = 2;
+    for (let i = 0; i <= GAME_SIZE; i++) {
+      ctx.beginPath();
+      ctx.moveTo(offsetX + i * TILESIZE, offsetY);
+      ctx.lineTo(offsetX + i * TILESIZE, offsetY + gridH);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(offsetX, offsetY + i * TILESIZE);
+      ctx.lineTo(offsetX + gridW, offsetY + i * TILESIZE);
+      ctx.stroke();
+    }
+  }
+
+  function drawTiles() {
+    ctx.font = "28px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    for (let r = 0; r < GAME_SIZE; r++) {
+      for (let c = 0; c < GAME_SIZE; c++) {
+        const val = board[r][c];
+        if (val === 0) continue;
+
+        const x = offsetX + c * TILESIZE;
+        const y = offsetY + r * TILESIZE;
+
+        const isTarget = targetPos && targetPos.r === r && targetPos.c === c;
+
+        ctx.fillStyle = isTarget ? "rgba(255,255,0,0.85)" : "rgba(255,255,255,0.85)";
+        ctx.fillRect(x + 6, y + 6, TILESIZE - 12, TILESIZE - 12);
+
+        ctx.fillStyle = "black";
+        ctx.fillText(String(val), x + TILESIZE / 2, y + TILESIZE / 2);
+      }
+    }
+  }
+
+  function strokeText(text, x, y, size = 22) {
+  ctx.save();
+
+  ctx.font = `${size}px Arial`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+
+  // ✅ ασφαλές padding για να μην κόβεται το stroke σε καμία συσκευή
+  const lineW = Math.max(6, Math.round(size * 0.28));
+  ctx.lineWidth = lineW;
+  ctx.lineJoin = "round";
+  ctx.miterLimit = 2;
+
+  const pad = lineW + 10;
+
+  // ✅ clamp X μέσα στο canvas με βάση το πραγματικό πλάτος κειμένου
+  const w = ctx.measureText(text).width;
+  const safeX = Math.min(Math.max(x, pad), canvas.width - pad - w);
+
+  // ✅ clamp Y (λίγο πιο κάτω γιατί μερικά fonts “βγαίνουν” προς τα πάνω)
+  const safeY = Math.max(y, pad);
+
+  ctx.strokeStyle = "rgba(0,0,0,0.75)";
+  ctx.strokeText(text, safeX, safeY);
+
+  ctx.fillStyle = "white";
+  ctx.fillText(text, safeX, safeY);
+
+  ctx.restore();
+}
+
+function drawHUD() {
+  const goal = LEVEL_GOALS[level - 1];
+  const targetVal = targetPos ? board[targetPos.r][targetPos.c] : "";
+
+  // ✅ ξεκινά πιο μέσα, αλλά αν η γραμμή είναι πολύ μεγάλη θα “μαζευτεί” μόνη της
+  const hudX = 44;
+  const hudY = 18;
+
+  strokeText(`Level: ${level}   Score: ${levelScore}/${goal}   Total: ${score}`, hudX, hudY, 22);
+  strokeText(`${tr("moves")}: ${moves}   ${tr("time")}: ${nowSec().toFixed(1)}s`, hudX, hudY + 30, 22);
+  strokeText(tr("move_tile_to_yellow", { tile: targetVal }), hudX, hudY + 60, 18);
+}
+
+  function drawHandMarker() {
+    if (!running) return;
+    if (!fingerX || !fingerY) return;
+    ctx.fillStyle = pinch ? "lime" : "red";
+    ctx.beginPath();
+    ctx.arc(fingerX, fingerY, 10, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawInstructions() {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.font = "24px Arial";
+    ctx.fillStyle = "white";
+    ctx.fillText(tr("welcome"), W / 2, 110);
+
+    ctx.font = "18px Arial";
+    const lines = [
+      tr("instructions_title"),
+      tr("inst_1"),
+      tr("inst_2"),
+      tr("goal_title"),
+      tr("goal_desc"),
+      "",
+      tr("press_start")
+    ];
+
+    let y = 170;
+    for (const line of lines) {
+      ctx.fillText(line, W / 2, y);
+      y += 30;
+    }
+
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+  }
+
+  function fitFontSize(text, maxWidth, startSize, minSize = 14, family = "Arial") {
+  let size = startSize;
+  while (size > minSize) {
+    ctx.font = `${size}px ${family}`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    size -= 1;
+  }
+  return size;
+}
+
+function drawCenteredFit(text, cx, y, startSize, maxWidth, color = "white") {
+  const size = fitFontSize(text, maxWidth, startSize);
+  ctx.font = `${size}px Arial`;
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, cx, y);
+}
+
+
+  function drawBetween() {
+  ctx.fillStyle = "rgba(0,0,0,0.60)";
+  ctx.fillRect(0, 0, W, H);
+
+  const cx = offsetX + gridW / 2;
+  const cy = offsetY + gridH / 2;
+
+  const maxWidth = gridW - 24; // ✅ μέσα στο grid/frame
+
+  drawCenteredFit(tr("level_passed", { level: level - 1 }), cx, cy - 20, 36, maxWidth, "white");
+  drawCenteredFit(tr("pinch_continue"), cx, cy + 22, 18, maxWidth, "white");
+
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+}
+
+function drawDone() {
+  ctx.fillStyle = "rgba(0,0,0,0.60)";
+  ctx.fillRect(0, 0, W, H);
+
+  const cx = offsetX + gridW / 2;
+  const cy = offsetY + gridH / 2;
+
+  const maxWidth = gridW - 24; // ✅ μέσα στο grid/frame
+
+  drawCenteredFit(tr("exercise_done"), cx, cy - 22, 36, maxWidth, "rgb(0,255,0)");
+  drawCenteredFit(tr("restart"), cx, cy + 22, 18, maxWidth, "white");
+
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+}
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    if (gameState === "instructions") {
+      drawInstructions();
+      return;
+    }
+
+    drawCameraBackground();
+    drawGridOverlay();
+    drawTiles();
+    drawHandMarker();
+    drawHUD();
+
+    if (gameState === "between") drawBetween();
+    if (gameState === "done") drawDone();
+  }
+
+  // ---------- Success + levels ----------
   function playSuccess() {
     try {
       successAudio.currentTime = 0;
@@ -212,13 +373,13 @@
     playSuccess();
     pickNewTarget();
 
-    score++;
-    levelScore++;
+    score += 1;
+    levelScore += 1;
 
     const goal = LEVEL_GOALS[level - 1];
     if (levelScore >= goal) {
       if (level < 3) {
-        level++;
+        level += 1;
         gameState = "between";
       } else {
         gameState = "done";
@@ -227,19 +388,19 @@
     }
   }
 
-  // ==============================
-  // Gesture-based movement
-  // ==============================
   function tryMoveFromHand() {
-    if (!running || gameState !== "playing" || !pinch) return;
+    if (!running) return;
+    if (gameState !== "playing") return;
+    if (!pinch) return;
 
-    // Debounce moves
     const t = Date.now();
     if (t - lastMoveAt < 350) return;
     lastMoveAt = t;
 
     const pos = tileAtPixel(fingerX, fingerY);
-    if (!pos || !targetPos) return;
+    if (!pos) return;
+
+    if (!targetPos) return;
     if (pos.r !== targetPos.r || pos.c !== targetPos.c) return;
     if (!isAdjacentToEmpty(pos)) return;
 
@@ -247,13 +408,11 @@
     onSuccessfulMove();
   }
 
-  // ==============================
-  // Stats submission (once)
-  // ==============================
   async function sendStatsCompleted() {
     if (sentOnce) return;
     sentOnce = true;
 
+    const time_seconds = Math.round(nowSec());
     try {
       await fetch("/add_stat", {
         method: "POST",
@@ -263,7 +422,7 @@
           age,
           game_name: "Άσκηση 3",
           score,
-          time_seconds: Math.round(nowSec()),
+          time_seconds,
           result: "completed"
         })
       });
@@ -272,32 +431,29 @@
     }
   }
 
-  // ==============================
-  // Main loop
-  // ==============================
   function tick() {
     if (!running) return;
 
-    // Edge-trigger pinch to continue to next level
+    // ✅ edge-trigger pinch to continue (release then pinch)
     const pinchDown = pinch && !prevPinch;
-    if (gameState === "between" && pinchDown) resetLevel();
+
+    if (gameState === "between" && pinchDown) {
+      resetLevel();
+    }
 
     draw();
     prevPinch = pinch;
     requestAnimationFrame(tick);
   }
 
-  // ==============================
-  // MediaPipe Hands setup
-  // ==============================
+  // ---------- MediaPipe ----------
   if (typeof Hands === "undefined") {
-    statusEl.textContent = "❌ MediaPipe Hands not loaded";
+    statusEl.textContent = "❌ MediaPipe Hands δεν φορτώθηκε";
     return;
   }
 
   const hands = new Hands({
-    locateFile: (file) =>
-      `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${file}`,
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/${file}`,
   });
 
   hands.setOptions({
@@ -307,11 +463,8 @@
     minTrackingConfidence: 0.5,
   });
 
-  function dist(a, b) {
-    return Math.hypot(a.x - b.x, a.y - b.y);
-  }
+  function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
 
-  // Process hand landmarks and detect pinch
   hands.onResults((res) => {
     const lms = res.multiHandLandmarks;
     if (!lms || lms.length === 0) {
@@ -325,18 +478,20 @@
     fingerY = lm[8].y * H;
 
     const thumb = { x: (1 - lm[4].x) * W, y: lm[4].y * H };
-    pinch = dist(thumb, { x: fingerX, y: fingerY }) < 35;
+    const index = { x: fingerX, y: fingerY };
+
+    pinch = dist(thumb, index) < 35;
 
     tryMoveFromHand();
   });
 
-  // ==============================
-  // Camera handling
-  // ==============================
+  // ---------- Camera ----------
   async function startCamera() {
     try {
+      statusEl.textContent = "📷 Ζητάω άδεια κάμερας...";
       video.setAttribute("playsinline", "");
       video.muted = true;
+      video.setAttribute("muted", "");
 
       stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user" },
@@ -345,16 +500,29 @@
 
       video.srcObject = stream;
       await video.play();
+
+      statusEl.textContent = "🎥 Κάμερα OK";
       processFrame();
     } catch (e) {
-      statusEl.textContent = "❌ Camera failed";
+      console.error("startCamera failed:", e);
+      statusEl.textContent = "❌ Δεν άνοιξε κάμερα (δες Console)";
       running = false;
+      startBtn.disabled = false;
+      restartBtn.disabled = false;
+      stopBtn.disabled = true;
     }
   }
 
   async function processFrame() {
     if (!running) return;
-    await hands.send({ image: video });
+    try {
+      await hands.send({ image: video });
+    } catch (e) {
+      console.error(e);
+      statusEl.textContent = "❌ MediaPipe error (δες Console)";
+      running = false;
+      return;
+    }
     requestAnimationFrame(processFrame);
   }
 
@@ -366,11 +534,9 @@
     video.srcObject = null;
   }
 
-  // ==============================
-  // Buttons
-  // ==============================
+  // ---------- Buttons ----------
   startBtn.onclick = async () => {
-    // Unlock audio on user gesture
+    // unlock audio
     try {
       await successAudio.play();
       successAudio.pause();
@@ -399,10 +565,11 @@
     stopBtn.disabled = true;
 
     gameState = "instructions";
+    statusEl.textContent = "⏹️ Σταμάτησε";
     draw();
   };
 
-  // Initial draw
+  // init
   gameState = "instructions";
   draw();
-})();
+})(); 
