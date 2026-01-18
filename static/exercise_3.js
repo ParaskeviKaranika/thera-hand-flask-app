@@ -61,6 +61,21 @@
 
   function nowSec() { return (Date.now() - startTime) / 1000; }
   function clone2D(a) { return a.map(r => r.slice()); }
+  function fitCanvasToDisplaySize() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  const newWidth = Math.round(rect.width * dpr);
+  const newHeight = Math.round(rect.height * dpr);
+
+  if (canvas.width !== newWidth || canvas.height !== newHeight) {
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+  }
+}
+
+fitCanvasToDisplaySize();
+
 
   function makeSolvedBoard() {
     const b = [];

@@ -473,6 +473,12 @@ body.dark-mode .bottom-navbar .nav-item.active,
 body.dark-mode .bottom-navbar .nav-item.active span {
   color: #fff !important;
 }
+/* ✅ LIGHT MODE: κάνε άσπρο το κείμενο μέσα στα task cards */
+body.light-mode .task,
+body.light-mode .task h3,
+body.light-mode .task span {
+  color: #ffffff !important;
+}
 
 /* responsive */
 @media (max-width: 480px) {
