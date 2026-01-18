@@ -775,9 +775,11 @@ def check_user():
 
     # 5) Δημιουργία χρήστη
     cursor.execute("""
-        INSERT INTO users (username, email, password, language, profile_completed, reminder)
-        VALUES (%s, %s, %s, %s, 0, 'no')
-    """, (username, email, hashed, lang))
+    INSERT INTO users (username, email, password, language, profile_completed, reminder)
+    VALUES (%s, %s, %s, %s, FALSE, 'no')
+""", (username, email, hashed, lang))
+
+    
     mysql.connection.commit()
 
     # 6) Πάρε το id και κάνε login
