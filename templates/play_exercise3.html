@@ -74,12 +74,13 @@
   </style>
 </head>
 
+<!-- User/session data passed to JavaScript -->
 <body
-  <!-- User/session data passed to JavaScript -->
   data-username="{{ session.get('username','Guest') }}"
   data-age="{{ session.get('age',0) }}"
   data-lang="{{ lang }}"
 >
+
 
 <!-- 
   Localization dictionary (i18n)

@@ -142,7 +142,9 @@ body {
 .task-info h3 {
   margin: 0;
   font-size: 18px;
+  color:white
 }
+
 
 .task-info span {
   font-size: 14px;
