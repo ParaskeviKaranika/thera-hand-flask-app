@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="{{ session.get('lang', 'el') }}">
+<head>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+
+  
+  <title>{{ t["app_title"] }}</title>
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="/manifest.webmanifest">
+
+  <!-- Browser theme color -->
+  <meta name="theme-color" content="#007bff">
+
+  
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <!-- ================= LOGIN / SIGN-UP CONTAINER ================= -->
+  <div class="container">
+
+    <!-- Application logo -->
+    <img src="/static/hand/hand.png" alt="Hand" class="logo">
+
+    <!-- Login & registration form -->
+    <form method="post" id="authForm" autocomplete="">
+      
+      <!-- Username input -->
+      <input type="text" name="username" id="username" class="input-field"
+             placeholder="{{ t['username_placeholder'] }}" autocomplete="off" required  >
+
+      <!-- Email input (used also for forgot password) -->
+      <input type="text" name="email" id="email" class="input-field"
+             placeholder="{{ t['email_placeholder'] }}"  autocomplete="off" required  >
+
+      <!-- Password input -->
+      <input type="password" name="password" id="password" class="input-field"
+             placeholder="{{ t['password_placeholder'] }}" autocomplete="new-password" required >
+
+      <!-- Submit button -->
+      <button type="submit" class="login-button">{{ t["continue"] }}</button>
+    </form>
+
+    <!-- Area for login error / status messages -->
+    <div id="message" class="message"></div>
+
+    <!-- Forgot password link -->
+    <p class="forgot-link" onclick="openForgotModal()">
+      {{ t["forgot_password_link"] }}
+    </p>
+
+  </div>
+
+  <!-- ================= FORGOT PASSWORD CONFIRMATION MODAL ================= -->
+  <div id="forgotModal" class="modal">
+    <div class="modal-content">
+
+      <!-- Modal title -->
+      <h3>{{ t["forgot_modal_title"] }}</h3>
+
+      <!-- Modal description -->
+      <p>{{ t["forgot_modal_text"] }}</p>
+
+      <!-- Modal action buttons -->
+      <div class="modal-buttons">
+        <button onclick="closeForgotModal()" class="cancel-btn">
+          {{ t["cancel"] }}
+        </button>
+        <button onclick="submitForgotPassword()" class="yes-btn">
+          {{ t["yes"] }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HIDDEN FORM FOR FORGOT PASSWORD ================= -->
+  <!-- This form is submitted programmatically via JavaScript -->
+  <form id="forgotForm" method="POST" action="{{ url_for('forgot_password') }}">
+    <input type="hidden" name="email" id="forgotEmail">
+  </form>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // ===== Translated messages from backend (i18n) =====
+    const MSG_WRONG_PASSWORD = "{{ t['wrong_password_msg'] }}";
+    const MSG_SERVER_ERROR   = "{{ t['server_error_msg'] }}";
+    const MSG_FILL_EMAIL     = "{{ t['fill_email_first'] }}";
+
+    // ===== Handle login / signup form submission =====
+    document.getElementById('authForm').addEventListener('submit', async function(e) {
+      e.preventDefault(); // Prevent default form submit (page reload)
+
+      // Read user input values
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const email    = document.getElementById('email').value;
+
+      try {
+        // Send login request to backend
+        const response = await fetch('/check_user', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, email })
+        });
+
+        const result = await response.text(); // Backend returns plain text
+
+        // Handle backend response
+        if (result === 'menu') {
+          // User fully registered → go to menu
+          window.location.href = '/menu';
+        }
+        else if (result === 'steps') {
+          // User must complete profile steps
+          window.location.href = '/sign_up/step1';
+        }
+        else if (result === 'Λάθος κωδικός!') {
+          // Wrong password (translated message)
+          document.getElementById('message').innerText = MSG_WRONG_PASSWORD;
+        }
+        else {
+          // Any other message from backend
+          document.getElementById('message').innerText = result;
+        }
+      } catch (error) {
+        // Network or server error
+        console.error('Error:', error);
+        document.getElementById('message').innerText = MSG_SERVER_ERROR;
+      }
+    });
+
+    // ===== Open forgot password confirmation modal =====
+    function openForgotModal(){
+      document.getElementById("forgotModal").style.display = "flex";
+    }
+
+    // ===== Close forgot password modal =====
+    function closeForgotModal(){
+      document.getElementById("forgotModal").style.display = "none";
+    }
+
+    // ===== Submit forgot password request =====
+    function submitForgotPassword() {
+      const email = document.getElementById("email").value;
+
+      // User must enter email first
+      if (!email) {
+        alert(MSG_FILL_EMAIL);
+        return;
+      }
+
+      // Put email into hidden form and submit it
+      document.getElementById("forgotEmail").value = email;
+      document.getElementById("forgotForm").submit();
+    }
+  </script>
+
+</body>
+</html>

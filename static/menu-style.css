@@ -1,0 +1,594 @@
+ body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 80px; 
+}
+
+/* 🧭 Navbar */
+/* NAV PROFILE ICON */
+.nav-profile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-avatar {
+    width: 50px;       
+    height: 50px;
+    border-radius: 50%;   
+    object-fit: cover;    
+    border: 2px solid white;
+    cursor: pointer;
+}
+
+.navbar {
+  height: 60px;
+  background: #706464;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(2, 2, 2, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar img {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.social {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* 🔗 Links */
+.navbar a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+
+
+/* 🧱 Κουτιά ασκήσεων */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding-top: 80px;
+}
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 20px;
+}
+
+.nav-item img {
+  width: 30px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+
+.exercise-box {
+  background-color: #989084;
+  padding: clamp(20px, 5vw, 40px);
+
+  border-radius: 10px;
+  font-size: clamp(20px, 4vw, 26px);
+
+
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 6px rgba(227, 187, 187, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: flex;              
+  justify-content: space-between; 
+  align-items: center;
+  min-height: 120px;
+}
+
+.exercise-img {
+  flex-shrink: 0;               
+  width: clamp(60px, 20vw, 100px); 
+  height: auto;
+  border-radius: 8px;
+}
+
+
+
+.exercise-box:hover {
+  background-color: #413629;
+}
+
+h1 {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #2e2b29; 
+  margin: 40px 0 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+  letter-spacing: 1px; 
+}
+
+
+h1::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 5px;
+  background: #9f7f4e;
+  margin: 12px auto 0;
+  border-radius: 3px;
+}
+a:focus,
+a:active,
+.exercise-box:focus,
+.exercise-box:active {
+  outline: 2px solid black; /* Χρυσό χρώμα */
+  outline-offset: 4px;
+}
+/* ------------ LIGHT MODE (default) ------------ */
+body.light-mode {
+    background-color: #ffffff !important;
+    color: #222 !important;
+}
+
+/* ------------ DARK MODE ------------ */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e6e6e6 !important;
+}
+
+/* NAVIGATION BARS */
+.dark-mode .navbar {
+    background-color: #1c1c1c !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.dark-mode .bottom-navbar {
+    background-color: #332c2c !important;
+    border-top: 1px solid #333 !important;
+}
+
+.dark-mode .nav-item {
+    color: #e6e6e6 !important;
+}
+
+.dark-mode .nav-item.active {
+    background-color: #333 !important;
+}
+
+/* EXERCISE BOXES */
+.dark-mode .exercise-box {
+    background-color: #30445b !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+.dark-mode .exercise-box:hover {
+    background-color: #887f7f !important;
+}
+
+/* TITLES */
+.dark-mode h1 {
+    color: #f1f1f1 !important;
+}
+
+.dark-mode h1::after {
+    background: #6c5ce7 !important;
+}
+
+/* OPTIONAL: Image adjustment */
+.dark-mode img {
+    filter: brightness(0.9);
+}
+
+/* Smooth transitions */
+body, .navbar, .bottom-navbar, .exercise-box, h1 {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+/* ===== Bottom Navbar - Fix text + icons in dark mode ===== */
+
+.dark-mode .bottom-navbar .nav-item span {
+    color: white !important;
+}
+
+
+body.dark-mode .bottom-navbar .nav-item img {
+  filter: invert(1) brightness(1.15) !important;
+  transition: filter 0.2s ease;
+}
+
+/* Active button (container) */
+body.dark-mode .bottom-navbar .nav-item.active {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* Active text */
+body.dark-mode .bottom-navbar .nav-item.active span {
+  color: white !important;
+}
+
+/* Active icon  */
+body.dark-mode .bottom-navbar .nav-item.active img {
+  filter: invert(1) brightness(1.25) !important;
+}
+
+
+.theme-toggle-icon {
+    font-size: 26px;
+    cursor: pointer;
+    margin-left: 10px;
+    user-select: none;
+}
+
+/* ========== TheraHand Bot Widget ========== */
+
+#thera-bot-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 90px; 
+    z-index: 99999;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Floating button */
+.bot-toggle-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+}
+
+.bot-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+    background: #0063cc;
+}
+
+/* Bot window */
+.bot-window {
+    position: absolute;
+    right: 0;
+    bottom: 70px;
+    width: 340px;
+    max-height: 480px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.bot-hidden {
+    display: none;
+}
+
+/* Header */
+.bot-header {
+    padding: 10px 12px;
+    background: #f5f7fb;
+    border-bottom: 1px solid #e0e3f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bot-header-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bot-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #6c5ce7);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bot-status {
+    font-size: 11px;
+    color: #4caf50;
+}
+
+.bot-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Bot message */
+.bot-messages {
+    flex: 1;
+    padding: 10px 10px 5px 10px;
+    overflow-y: auto;
+    background: #f9fafc;
+}
+
+
+.bot-bubble {
+    max-width: 80%;
+    padding: 8px 10px;
+    border-radius: 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Bot message */
+.bot-bubble.bot {
+    background: #e6ecff;
+    color: #222;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+/* User message */
+.bot-bubble.user {
+    background: #007bff;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+.bot-message-row {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Input bar */
+.bot-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 8px;
+    border-top: 1px solid #e0e3f0;
+    background: #fff;
+}
+
+.bot-input-bar input {
+    flex: 1;
+    border-radius: 20px;
+    border: 1px solid #d0d4e3;
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+}
+
+.bot-input-bar input:focus {
+    border-color: #007bff;
+}
+
+/* Buttons  input bar */
+.bot-voice-btn,
+.bot-send-btn {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-voice-btn {
+    background: #f0f2ff;
+    font-size: 16px;
+}
+
+.bot-send-btn {
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Voice status */
+.bot-voice-status {
+    min-height: 16px;
+    font-size: 11px;
+    color: #666;
+    padding: 0 10px 6px 10px;
+}
+/* =============================== */
+/* Remove active grey background    */
+/* ONLY in bottom navbar            */
+/* =============================== */
+
+.bottom-navbar .nav-item.active{
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+body.dark-mode .bottom-navbar .nav-item.active{
+  background: transparent !important;
+}
+.thera-toast {
+  position: absolute;
+  right: calc(100% + 12px);  
+  bottom: 0;                 
+  max-width: 320px;
+  background: #0c7fdd;
+  color: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.thera-toast-body {
+  font-size: 14px;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+
+.thera-toast-close {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.thera-toast-close:hover {
+  background: rgba(255,255,255,.12);
+}
+
+.thera-hidden {
+  display: none;
+}
+
+/*  responsive */
+@media (max-width: 480px) {
+    .bot-window {
+        width: 100vw;
+        right: -10px;
+        border-radius: 18px 18px 0 0;
+    }
+}
+
+
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: row;              
+    justify-content: space-between;   
+    padding: 10px;
+  }
+
+  .navbar img {
+    width: 28px;
+    height: 28px;
+  }
+
+    .menu-container {
+    padding-top: 80px;
+    max-width: 95%;
+    margin: 0 auto;
+  }
+    
+  
+  .exercise-box {
+    font-size: clamp(14px, 4vw, 20px); 
+    padding: 16px;                     
+    min-height: 90px;                  
+     flex-direction: row;         
+    align-items: center;
+    gap: 10px;
+  }
+
+  .exercise-img {
+  width: clamp(50px, 25vw, 80px); /* ✅ λίγο πιο ευέλικτο για μικρές οθόνες */
+  }
+
+
+  body {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .menu-container {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .exercise-box {
+    font-size: 20px;
+    padding: 20px;
+    min-height: 110px;
+  }
+
+  .exercise-img {
+    width: 80px;
+    height: auto;
+  }
+
+  .nav-item {
+    font-size: 16px;
+  }
+
+  .nav-item img {
+    width: 36px;
+    height: 30px;
+  }
+  #thera-bot-widget {
+    right: 12px;
+    bottom: 80px;
+  }
+
+  .thera-toast {
+    position: absolute;
+    right: calc(100% + 8px);   
+    bottom: 0;
+    max-width: 75vw;           
+    font-size: 14px;
+  }
+}

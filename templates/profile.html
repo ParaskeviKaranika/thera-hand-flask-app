@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>{{ t['rehab_profile'] }}</title>
+  <link rel="stylesheet" href="/static/profile.css">
+</head>
+
+<body class="{{ (user.theme or 'Light')|lower }}-mode" data-delete-confirm="{{ t['delete_confirm'] | e }}">
+  <nav class="navbar">
+    <div class="theme-toggle-icon" onclick="toggleTheme()">🌓</div>
+  </nav>
+
+  <main class="profile-container">
+    <section class="avatar-section">
+      <div class="avatar-wrapper">
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ (user.avatar if user.avatar else 'default.png')) }}"
+          alt="Avatar"
+          class="avatar"
+        >
+
+        {% if is_owner %}
+        <form action="{{ url_for('upload_avatar') }}" method="POST" enctype="multipart/form-data">
+          <label for="avatar-input" class="avatar-upload-btn">+</label>
+          <input id="avatar-input" type="file" name="avatar" accept="image/*" hidden onchange="this.form.submit()">
+        </form>
+        {% endif %}
+      </div>
+
+      <h2>{{ user.username }}</h2>
+      <p>{{ user.email }}</p>
+
+      {% if is_owner %}
+        <a href="{{ url_for('logout') }}" class="logout-btn">{{ t['logout'] }}</a>
+      {% endif %}
+    </section>
+
+    <h3>{{ t['profile_info'] }}</h3>
+    <ul>
+      <li><strong>{{ t['age'] }}:</strong> {{ user.age or t['not_set'] }}</li>
+      
+
+      <li>
+        <strong>{{ t['reminder'] }}:</strong>
+        {% if user.reminder == "yes" %}
+          <span style="color:#4caf50;">{{ t['active'] }}</span>
+        {% else %}
+          <span style="color:#f44336;">{{ t['inactive'] }}</span>
+        {% endif %}
+      </li>
+
+      <li>
+        <strong>{{ t['reminder_time'] }}:</strong>
+        {% if user.exercise_time %}
+          {{ user.exercise_time }}
+        {% else %}
+          {{ t['not_set'] }}
+        {% endif %}
+      </li>
+    </ul>
+
+    <!-- Reminder settings -->
+    <section class="reminder-settings">
+      <h3>{{ t['change_reminder_settings'] }}</h3>
+
+      <form action="{{ url_for('update_reminder') }}" method="POST" class="reminder-form">
+        <label><strong>{{ t['enable_reminder'] }}:</strong></label>
+        <select name="reminder">
+          <option value="yes" {% if user.reminder == 'yes' %}selected{% endif %}>{{ t['yes'] }}</option>
+          <option value="no"  {% if user.reminder == 'no'  %}selected{% endif %}>{{ t['no'] }}</option>
+        </select>
+
+        <br><br>
+
+        <label><strong>{{ t['reminder_time'] }}:</strong></label><br>
+        <input type="time" name="exercise_time" value="{{ user.exercise_time if user.exercise_time else '' }}">
+
+        <br><br>
+
+        <button type="submit" class="save-reminder-btn">{{ t['save'] }}</button>
+      </form>
+    </section>
+
+    <section class="rehab-info">
+  <h3>{{ t['rehab_program'] }}</h3>
+  <ul>
+    <li>
+      <strong>{{ t['stage'] }}:</strong>
+      {{ t['stage_' ~ user.stage] if user.stage else t['not_set'] }}
+    </li>
+
+    <li>
+      <strong>{{ t['type'] }}:</strong>
+      {{ t['type_' ~ user.type] if user.type else t['not_set'] }}
+    </li>
+
+    <li>
+      <strong>{{ t['frequency'] }}:</strong>
+      {{ t['freq_' ~ user.frequency] if user.frequency else t['not_set'] }}
+    </li>
+
+    <li>
+      <strong>{{ t['duration'] }}:</strong>
+      {{ t['dur_' ~ user.duration] if user.duration else t['not_set'] }}
+    </li>
+
+    <li>
+      <strong>{{ t['next_exercise'] }}:</strong>
+      {{ t[user.next_exercise] if user.next_exercise else t['not_scheduled'] }}
+    </li>
+  </ul>
+</section>
+
+
+    <!-- Preferences (language dropdown) -->
+    <section class="preferences">
+      <h3>{{ t['settings'] }}</h3>
+
+      <form action="{{ url_for('change_language') }}" method="POST">
+        <label>
+          <strong>{{ t['language'] }}:</strong>
+          <select name="language" onchange="this.form.submit()">
+            <option value="el" {% if lang == 'el' %}selected{% endif %}>{{ t['greek'] }}</option>
+            <option value="en" {% if lang == 'en' %}selected{% endif %}>{{ t['english'] }}</option>
+          </select>
+        </label>
+      </form>
+    </section>
+
+    <section class="profile-settings-box">
+      <h3>{{ t['profile_management'] }}</h3>
+
+      <ul>
+        <li><a href="{{ url_for('edit_profile') }}">✏️ {{ t['edit_profile'] }}</a></li>
+        <li><a href="{{ url_for('change_password') }}">🔑 {{ t['change_password'] }}</a></li>
+        <li>
+          <form method="POST" action="{{ url_for('delete_account') }}"
+                onsubmit="return confirm(DELETE_CONFIRM);">
+            <button type="submit" class="delete-btn">🗑️ {{ t['delete_account'] }}</button>
+          </form>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="bottom-navbar">
+    <a href="{{ url_for('today') }}" class="nav-item active">
+      <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+      <span>{{ t['today'] }}</span>
+    </a>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-item">
+      <img src="/static/menu_images/statistic.png" alt="{{ t['stats'] }}">
+      <span>{{ t['stats'] }}</span>
+    </a>
+
+    <a href="{{ url_for('menu') }}" class="nav-item">
+      <img src="/static/menu_images/games.png" alt="{{ t['games'] }}">
+      <span>{{ t['games'] }}</span>
+    </a>
+  </footer>
+
+  <script>
+    // ✅ σωστό (χωρίς διπλά quotes)
+    
+  const DELETE_CONFIRM = document.body.dataset.deleteConfirm;
+
+
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const soundToggle = document.getElementById("sound-toggle");
+      if (!soundToggle) return;
+
+      soundToggle.addEventListener("click", function () {
+        soundToggle.classList.toggle("off");
+        soundToggle.textContent = soundToggle.classList.contains("off") ? "Ανενεργά" : "Ενεργά";
+        soundToggle.style.color = soundToggle.classList.contains("off") ? "#f44336" : "#4caf50";
+      });
+    });
+  </script>
+
+  <!-- ✅ TheraHand Chat Bot Widget (άφησα τα κείμενα όπως είναι προς το παρόν) -->
+  <div id="thera-bot-widget">
+    <button id="thera-bot-toggle" class="bot-toggle-btn" aria-label="Άνοιγμα συνομιλίας υποστήριξης">💬</button>
+
+    <div id="thera-bot-window" class="bot-window bot-hidden">
+      <div class="bot-header">
+        <div class="bot-header-info">
+          <div class="bot-avatar">TH</div>
+          <div>
+            <div class="bot-title">TheraHand Bot</div>
+            <div class="bot-status">🟢 Διαθέσιμο</div>
+          </div>
+        </div>
+        <button class="bot-close-btn" id="thera-bot-close" aria-label="Κλείσιμο">✕</button>
+      </div>
+
+      <div class="bot-messages" id="thera-bot-messages"></div>
+
+      <div class="bot-input-bar">
+        <button id="thera-bot-voice" class="bot-voice-btn" title="Φωνητικό μήνυμα">🎤</button>
+        <input id="thera-bot-input" type="text" placeholder="Γράψε το μήνυμά σου..." autocomplete="off">
+        <button id="thera-bot-send" class="bot-send-btn" aria-label="Αποστολή">➤</button>
+      </div>
+
+      <div class="bot-voice-status" id="thera-bot-voice-status"></div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+  <script src="/static/theme.js"></script>
+</body>
+</html>

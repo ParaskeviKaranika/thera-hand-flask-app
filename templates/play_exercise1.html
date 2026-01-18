@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <!-- Responsive viewport for mobile devices (including notch-safe areas) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Character encoding -->
+  <meta charset="UTF-8">
+  <meta charset="width=device-width, initial-scale=1.0">
+
+  <!-- Page title (localized from translations) -->
+  <title>{{ t['exercise_1_title'] }}</title>
+
+  <!-- Global exercise styles -->
+  <link rel="stylesheet" href="/static/exercises_style.css">
+
+  <style>
+    /* Canvas styling (fixed border + rounded corners) */
+    canvas {
+      width: 100%;
+      max-width: 520px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+    }
+
+    /* Button row layout */
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    /* Button styling */
+    button {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 0;
+      background: #00308F;
+      color: #fff;
+    }
+
+    /* Disabled button state */
+    button:disabled {
+      opacity: 0.6;
+    }
+
+    /*
+      Hidden video element:
+      - We keep it in the DOM because MediaPipe needs a real video element as input.
+      - Do NOT use display:none on some browsers (especially mobile Safari) because it can break playback/frames.
+      - Instead, move it off-screen and make it tiny.
+    */
+    video{
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+  </style>
+</head>
+
+<!--
+  Pass session/user data to JS using data-* attributes.
+  JS can read these via document.body.dataset.username / dataset.age.
+-->
+<body
+  data-username="{{ session.get('username', 'Guest') }}"
+  data-age="{{ session.get('age', 0) }}"
+>
+
+<!-- ===================== Top Navigation Bar ===================== -->
+<nav class="navbar">
+
+  <!-- User avatar / profile link -->
+  <div class="user-icon">
+    {% if 'username' in session %}
+      <a href="{{ url_for('profile', username=session['username']) }}" class="nav-profile-icon">
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ (session.get('avatar') if session.get('avatar') else 'group_of_people.png')) }}"
+          class="nav-avatar"
+          alt="{{ t['profile_alt'] }}">
+      </a>
+    {% else %}
+      <a href="{{ url_for('profile', username=session['username']) }}">
+        <img src="/static/menu_images/User.png" alt="{{ t['user_alt'] }}" />
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Theme toggle (handled in theme.js) -->
+  <div class="theme-toggle-icon" onclick="toggleTheme()">
+    🌓
+  </div>
+</nav>
+
+<!--
+  i18n dictionary passed from backend → used by exercise_1.js.
+  This allows the JS to localize:
+  - button labels (Start/Restart/Stop)
+  - HUD labels (Score/Time)
+  - win/lose overlay messages
+-->
+<script id="i18n" type="application/json">
+{
+  "btn_start": {{ t.get("btn_start")|tojson }},
+  "btn_restart": {{ t.get("btn_restart")|tojson }},
+  "btn_stop": {{ t.get("btn_stop")|tojson }},
+
+  "hud_score": {{ t.get("hud_score")|tojson }},
+  "hud_time": {{ t.get("hud_time")|tojson }},
+
+  "win_title": {{ t.get("win_title")|tojson }},
+  "lose_title": {{ t.get("lose_title")|tojson }},
+  "tap_restart": {{ t.get("tap_restart")|tojson }}
+}
+</script>
+
+<!-- Exercise title -->
+<h2>{{ t['exercise_1_title'] }}</h2>
+
+<!--
+  Hidden camera video:
+  - Used as the input source for MediaPipe Hands
+  - Not shown to the user
+-->
+<video id="cam" playsinline></video>
+
+<!--
+  Main game canvas:
+  - Draws background, stars, hand cursor, HUD and win/lose overlay
+-->
+<canvas id="gameCanvas" width="600" height="600"></canvas>
+
+<!-- Game controls -->
+<div class="row">
+  <!-- Note: Text here can be overwritten by JS using i18n -->
+  <button id="startBtn">Έναρξη</button>
+  <button id="restartBtn" disabled>Restart</button>
+  <button id="stopBtn" disabled>Stop</button>
+</div>
+
+<!-- Optional status area (kept empty in the JS by default) -->
+<div id="status"></div>
+
+<!-- ===================== Bottom Navigation ===================== -->
+<footer class="bottom-navbar">
+  <a href="{{ url_for('today') }}" class="nav-item active">
+    <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+    <span>{{ t['today'] }}</span>
+  </a>
+
+  <a href="{{ url_for('dashboard') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/statistic.png') }}" alt="{{ t['stats'] }}">
+    <span>{{ t['stats'] }}</span>
+  </a>
+
+  <a href="{{ url_for('menu') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/games.png') }}" alt="{{ t['games'] }}">
+    <span>{{ t['games'] }}</span>
+  </a>
+</footer>
+
+<!-- ===================== Scripts ===================== -->
+
+<!-- MediaPipe Hands library -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.min.js"></script>
+
+<!-- Exercise 1 game logic (reads i18n + controls camera + draws on canvas) -->
+<script src="{{ url_for('static', filename='exercise_1.js') }}?v=99"></script>
+
+<!-- Theme handling (light/dark mode) -->
+<script src="/static/theme.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <!-- Character encoding -->
+  <meta charset="UTF-8">
+
+  <!-- Responsive viewport for mobile & PWA -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Page title (translated) -->
+  <title>{{ t['today'] }}</title>
+
+  <!-- Page-specific stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='today.css') }}">
+</head>
+
+<!-- ================= BODY WITH I18N DATA ATTRIBUTES ================= -->
+<body
+  data-you-played="{{ t['you_played'] | e }}"
+  data-times-singular="{{ t['times_singular'] | e }}"
+  data-times-plural="{{ t['times_plural'] | e }}"
+  data-today-label="{{ t['today'] | e }}"
+  data-no-exercises-today="{{ t['no_exercises_today'] | e }}"
+  data-lang="{{ lang }}"
+  data-weekdays="{{ 'ΔΕΥ,ΤΡΙ,ΤΕΤ,ΠΕΜ,ΠΑΡ,ΣΑΒ,ΚΥΡ' if lang=='el' else 'MON,TUE,WED,THU,FRI,SAT,SUN' }}"
+>
+  <!-- ================= TOP NAVBAR ================= -->
+  <nav class="navbar">
+    <div class="user-icon">
+      <!-- Profile avatar linking to user profile -->
+      <a href="{{ url_for('profile', username=session['username']) }}" class="nav-profile-icon">
+        <img
+          src="{{ url_for('static', filename='uploads/' + (session.get('avatar') or 'group_of_people.png')) }}"
+          class="nav-avatar"
+          alt="Profile">
+      </a>
+    </div>
+
+    <!-- Theme toggle (light / dark) -->
+    <div class="theme-toggle-icon" onclick="toggleTheme()">🌓</div>
+  </nav>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="container">
+
+    <!-- Header greeting section -->
+    <div class="header">
+      <h1>
+        {{ t['hello'] }}, <span class="green">{{ username }}</span>!
+      </h1>
+
+      <!-- Total exercises completed today -->
+      <p>
+        {{ t['today_completed'] }}
+        <strong>{{ total }}</strong>
+        {{ t['times_singular'] if total == 1 else t['times_plural'] }} 💪
+      </p>
+    </div>
+
+    <!-- Weekday progress indicator -->
+    <div class="week" id="weekdays"></div>
+
+    <!-- ================= TODAY'S EXERCISES ================= -->
+    <div class="tasks" id="tasks-container">
+      <h2>{{ t['today'] }}</h2>
+
+      {% if today_stats %}
+        {% for stat in today_stats %}
+        <div class="task">
+          <div class="task-icon">🎮</div>
+          <div class="task-info">
+            <h3>{{ stat.game_name }}</h3>
+            <span>
+              {{ t['you_played'] }}
+              {{ stat.plays }}
+              {{ t['times_singular'] if stat.plays == 1 else t['times_plural'] }}
+            </span>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <!-- Message when no exercises were completed today -->
+        <p style="text-align:center; margin-top:20px;">
+          {{ t['no_exercises_today'] }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ================= BOTTOM NAVIGATION ================= -->
+  <footer class="bottom-navbar">
+    <a href="{{ url_for('today') }}" class="nav-item active">
+      <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+      <span>{{ t['today'] }}</span>
+    </a>
+
+    <a href="{{ url_for('dashboard') }}" class="nav-item">
+      <img src="{{ url_for('static', filename='menu_images/statistic.png') }}" alt="{{ t['stats'] }}">
+      <span>{{ t['stats'] }}</span>
+    </a>
+
+    <a href="{{ url_for('menu') }}" class="nav-item">
+      <img src="{{ url_for('static', filename='menu_images/games.png') }}" alt="{{ t['games'] }}">
+      <span>{{ t['games'] }}</span>
+    </a>
+  </footer>
+
+  <!-- ================= PAGE SCRIPT ================= -->
+  <script>
+    // ===== Read translated values from <body> data-attributes =====
+    const YOU_PLAYED = document.body.dataset.youPlayed;
+    const TIMES_SINGULAR = document.body.dataset.timesSingular;
+    const TIMES_PLURAL = document.body.dataset.timesPlural;
+    const TODAY_LABEL = document.body.dataset.todayLabel;
+    const NO_EX_TODAY = document.body.dataset.noExercisesToday;
+    const days = document.body.dataset.weekdays.split(",");
+    const lang = document.body.dataset.lang;
+
+    // ===== Calculate current weekday index for Athens timezone =====
+    // We want: Monday = 0 ... Sunday = 6
+    function getAthensMondayIndex() {
+      const dt = new Date();
+
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Athens",
+        weekday: "short"
+      }).formatToParts(dt);
+
+      const wk = parts.find(p => p.type === "weekday")?.value; // Mon, Tue, ...
+      const map = { Mon:0, Tue:1, Wed:2, Thu:3, Fri:4, Sat:5, Sun:6 };
+
+      // Fallback to local calculation if something goes wrong
+      return map[wk] ?? ((dt.getDay() + 6) % 7);
+    }
+
+    // ===== Render weekday indicator =====
+    function renderWeek() {
+      const activeIndex = getAthensMondayIndex();
+      const weekContainer = document.getElementById("weekdays");
+
+      weekContainer.innerHTML = "";
+
+      days.forEach((day, index) => {
+        const div = document.createElement("div");
+        div.className = "day" + (index === activeIndex ? " active" : "");
+        div.innerHTML = `<div>${day}</div><div class="circle"></div>`;
+        weekContainer.appendChild(div);
+      });
+    }
+
+    // Initial render of weekdays
+    renderWeek();
+
+    // ===== Refresh today's exercise stats (AJAX) =====
+    function refreshStats() {
+      fetch("{{ url_for('api_today_stats') }}")
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("tasks-container");
+
+          let html = `<h2>${TODAY_LABEL}</h2>`;
+
+          if (!data || data.length === 0) {
+            // No exercises today
+            html += `<p style="text-align:center; margin-top:20px;">${NO_EX_TODAY}</p>`;
+          } else {
+            // Render each exercise
+            html += data.map(stat => `
+              <div class="task">
+                <div class="task-icon">🎮</div>
+                <div class="task-info">
+                  <h3>${stat.game_name}</h3>
+                  <span>
+                    ${YOU_PLAYED} ${stat.plays}
+                    ${stat.plays === 1 ? TIMES_SINGULAR : TIMES_PLURAL}
+                  </span>
+                </div>
+              </div>
+            `).join('');
+          }
+
+          container.innerHTML = html;
+        })
+        .catch(() => {
+          // Optional: translated error message could be shown here
+        });
+    }
+
+    // Auto-refresh every 10 seconds
+    setInterval(refreshStats, 10000);
+    refreshStats();
+  </script>
+
+  <!-- ================= CHATBOT WIDGET ================= -->
+  <div id="thera-bot-widget">
+    <button id="thera-bot-toggle" class="bot-toggle-btn" aria-label="{{ t.bot_open_chat_aria }}">💬</button>
+
+    <div id="thera-bot-window" class="bot-window bot-hidden">
+      <div class="bot-header">
+        <div class="bot-header-info">
+          <div class="bot-avatar">TH</div>
+          <div>
+            <div class="bot-title">TheraHand Bot</div>
+            <div class="bot-status">🟢 {{ t.bot_available }}</div>
+          </div>
+        </div>
+        <button class="bot-close-btn" id="thera-bot-close" aria-label="{{ t.close }}">✕</button>
+      </div>
+
+      <div class="bot-messages" id="thera-bot-messages"></div>
+
+      <div class="bot-input-bar">
+        <button id="thera-bot-voice" class="bot-voice-btn" title="{{ t.voice_message }}">🎤</button>
+        <input id="thera-bot-input" type="text" placeholder="{{ t.type_your_message }}" autocomplete="off">
+        <button id="thera-bot-send" class="bot-send-btn" aria-label="{{ t.send }}">➤</button>
+      </div>
+
+      <div class="bot-voice-status" id="thera-bot-voice-status"></div>
+    </div>
+  </div>
+
+</body>
+
+<!-- Theme handling -->
+<script src="/static/theme.js"></script>
+
+<!-- Chatbot logic -->
+<script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+</html>

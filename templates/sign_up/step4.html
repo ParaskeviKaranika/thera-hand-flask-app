@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <title>{{ t['step4_title'] }}</title>
+  <link rel="stylesheet" href="/static/style_sign_up_page.css">
+</head>
+
+<body>
+
+  
+
+  <div class="container">
+    <h2>{{ t['step4_heading'] }}</h2>
+    <p>{{ t['step4_subtext'] }}</p>
+
+    <form action="{{ url_for('complete_profile') }}" method="post">
+
+      <label>{{ t['stage'] }}:</label>
+      <select name="stage" required>
+        <option value="postop_phase1">{{ t['stage_postop_phase1'] }}</option>
+        <option value="postop_phase2">{{ t['stage_postop_phase2'] }}</option>
+        <option value="rehab">{{ t['stage_rehab'] }}</option>
+      </select>
+
+      <label>{{ t['type'] }}:</label>
+      <select name="type" required>
+        <option value="strength">{{ t['type_strength'] }}</option>
+        <option value="mobility">{{ t['type_mobility'] }}</option>
+        <option value="coordination">{{ t['type_coordination'] }}</option>
+      </select>
+
+      <label>{{ t['frequency'] }}:</label>
+      <select name="frequency" required>
+        <option value="2_per_week">{{ t['freq_2_per_week'] }}</option>
+        <option value="3_per_week">{{ t['freq_3_per_week'] }}</option>
+        <option value="4_per_week">{{ t['freq_4_per_week'] }}</option>
+        <option value="5_per_week">{{ t['freq_5_per_week'] }}</option>
+      </select>
+
+      <label>{{ t['duration'] }}:</label>
+      <select name="duration" required>
+        <option value="2_weeks">{{ t['dur_2_weeks'] }}</option>
+        <option value="4_weeks">{{ t['dur_4_weeks'] }}</option>
+        <option value="6_weeks">{{ t['dur_6_weeks'] }}</option>
+        <option value="3_months">{{ t['dur_3_months'] }}</option>
+      </select>
+
+      <label>{{ t['next_exercise'] }}:</label>
+      <select name="next_exercise" required>
+        <option value="exercise_1">{{ t['exercise_1'] }}</option>
+        <option value="exercise_2">{{ t['exercise_2'] }}</option>
+        <option value="exercise_3">{{ t['exercise_3'] }}</option>
+        <option value="exercise_4">{{ t['exercise_4'] }}</option>
+      </select>
+
+      <button type="submit" class="finish-btn">{{ t['finish'] }}</button>
+    </form>
+
+    <div class="nav-arrows">
+      <a href="{{ url_for('sign_up_steps', step_number=3) }}" class="arrow">
+        <img src="/static/hand/arrow-left.png" alt="{{ t['back'] }}">
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>

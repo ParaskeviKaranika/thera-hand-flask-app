@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+
+  <title>{{ t['step3_title'] }}</title>
+  <link rel="stylesheet" href="/static/style_sign_up_page.css">
+</head>
+
+<body>
+
+  
+
+  <h2>{{ t['step3_question_reminder'] }}</h2>
+
+  <form action="{{ url_for('save_step3') }}" method="post">
+    <select id="reminder" name="reminder" required>
+      <option value="yes">{{ t['yes'] }}</option>
+      <option value="no">{{ t['no'] }}</option>
+    </select>
+
+    <div id="timeContainer">
+      <h3>{{ t['step3_pick_time'] }}</h3>
+      <input type="time" id="exercise_time" name="exercise_time">
+    </div>
+
+    <div class="nav-arrows">
+      <a href="{{ url_for('sign_up_steps', step_number=2) }}" class="arrow">
+        <img src="/static/hand/arrow-left.png" alt="{{ t['back'] }}">
+      </a>
+
+      <button type="submit" class="arrow-btn">
+        <img src="/static/hand/arrow-right.png" alt="{{ t['next'] }}">
+      </button>
+    </div>
+  </form>
+
+  <script>
+    // Show/hide time selection depending on reminder choice
+    const reminderSelect = document.getElementById('reminder');
+    const timeContainer = document.getElementById('timeContainer');
+    const timeInput = document.getElementById('exercise_time');
+
+    reminderSelect.addEventListener('change', () => {
+      if (reminderSelect.value === 'yes') {
+        timeContainer.style.display = 'block';
+        timeInput.required = true;
+      } else {
+        timeContainer.style.display = 'none';
+        timeInput.required = false;
+        timeInput.value = '';
+      }
+    });
+
+    // Initial state
+    if (reminderSelect.value === 'no') {
+      timeContainer.style.display = 'none';
+      timeInput.required = false;
+    } else {
+      timeContainer.style.display = 'block';
+      timeInput.required = true;
+    }
+  </script>
+
+</body>
+</html>
+

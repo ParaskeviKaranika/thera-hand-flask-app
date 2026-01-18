@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <!-- Responsive viewport for mobile & notch-safe devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Character encoding -->
+  <meta charset="UTF-8">
+  <meta name="width=device-width, initial-scale=1.0">
+
+  <!-- Page title (localized) -->
+  <title>{{ t['exercise_1_title'] }}</title>
+
+  <!-- Global exercise styles -->
+  <link rel="stylesheet" href="/static/exercises_style.css">
+
+  <!-- Page-specific styles -->
+  <style>
+    /* Main content container */
+    .wrap{
+      max-width:520px;
+      margin: 12px auto;
+      padding: 10px;
+    }
+
+    /* Game canvas styling */
+    canvas{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #ccc;
+      display:block;
+    }
+
+    /* Button row layout */
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    /* Button appearance */
+    button{
+      padding:10px 14px;
+      border-radius:10px;
+      border:0;
+      background:#00308F;
+      color:#fff;
+    }
+
+    /* Disabled button state */
+    button:disabled{
+      opacity:0.6;
+    }
+
+    /* 
+      Hidden video element:
+      - Must NOT be display:none
+      - Used as camera source for MediaPipe
+    */
+    video{
+      position:absolute;
+      left:-9999px;
+      width:1px;
+      height:1px;
+      opacity:0;
+    }
+
+    /* Status text under the buttons */
+    #status{
+      margin-top:10px;
+      font-weight:600;
+    }
+  </style>
+</head>
+
+<body
+  <!-- User/session data passed to JavaScript -->
+  data-username="{{ session.get('username','Guest') }}"
+  data-age="{{ session.get('age',0) }}"
+  data-lang="{{ lang }}"
+>
+
+<!-- 
+  Localization dictionary (i18n)
+  Injected from backend translations
+-->
+<script id="i18n" type="application/json">
+{
+  "welcome": {{ (t.get('welcome') or 'Welcome')|tojson }},
+  "instructions_title": {{ (t.get('instructions_title') or 'Instructions')|tojson }},
+  "inst_1": {{ (t.get('inst_1') or '...')|tojson }},
+  "inst_2": {{ (t.get('inst_2') or '...')|tojson }},
+  "goal_title": {{ (t.get('goal_title') or 'Goal')|tojson }},
+  "goal_desc": {{ (t.get('goal_desc') or '...')|tojson }},
+  "press_start": {{ (t.get('press_start') or 'Press Start to begin')|tojson }},
+  "next_level": {{ (t.get('next_level') or 'Next level')|tojson }},
+  "level_passed": {{ (t.get('level_passed') or 'Level passed')|tojson }},
+  "exercise_done": {{ (t.get('exercise_done') or 'Exercise completed')|tojson }},
+  "restart": {{ (t.get('restart') or 'Restart')|tojson }},
+  "pinch_continue": {{ (t.get('pinch_continue') or 'Pinch to continue')|tojson }},
+  "moves": {{ (t.get('moves') or 'Moves')|tojson }},
+  "time": {{ (t.get('time') or 'Time')|tojson }},
+  "move_tile_to_yellow": {{ (t.get('move_tile_to_yellow') or 'Move tile {tile} (yellow) into empty')|tojson }}
+}
+</script>
+
+<!-- ================= Top Navigation Bar ================= -->
+<nav class="navbar">
+
+  <!-- User profile / avatar icon -->
+  <div class="user-icon">
+    {% if 'username' in session %}
+      <a href="{{ url_for('profile', username=session['username']) }}" class="nav-profile-icon">
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ (session.get('avatar') if session.get('avatar') else 'group_of_people.png')) }}"
+          class="nav-avatar"
+          alt="{{ t['profile_alt'] }}">
+      </a>
+    {% else %}
+      <a href="{{ url_for('profile', username=session['username']) }}">
+        <img src="/static/menu_images/User.png" alt="{{ t['user_alt'] }}" />
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Light/Dark theme toggle -->
+  <div class="theme-toggle-icon" onclick="toggleTheme()">
+    🌓
+  </div>
+</nav>
+
+<!-- ================= Main Game Area ================= -->
+<div class="wrap">
+
+  <!-- Exercise title -->
+  <h2>{{ t['exercise_3_title'] if t.get('exercise_3_title') else 'Exercise 3' }}</h2>
+
+  <!-- Camera feed (hidden, used by MediaPipe Hands) -->
+  <video id="cam" playsinline></video>
+
+  <!-- Main game canvas (camera + puzzle + HUD) -->
+  <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+  <!-- Game control buttons -->
+  <div class="row">
+    <button id="startBtn">Έναρξη</button>
+    <button id="restartBtn" disabled>Restart</button>
+    <button id="stopBtn" disabled>Stop</button>
+  </div>
+
+  <!-- Status / feedback messages -->
+  <div id="status">Έτοιμο</div>
+</div>
+
+<!-- ================= Bottom Navigation ================= -->
+<footer class="bottom-navbar">
+
+  <!-- Today / Planning -->
+  <a href="{{ url_for('today') }}" class="nav-item active">
+    <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+    <span>{{ t['today'] }}</span>
+  </a>
+
+  <!-- Statistics -->
+  <a href="{{ url_for('dashboard') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/statistic.png') }}" alt="{{ t['stats'] }}">
+    <span>{{ t['stats'] }}</span>
+  </a>
+
+  <!-- Games menu -->
+  <a href="{{ url_for('menu') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/games.png') }}" alt="{{ t['games'] }}">
+    <span>{{ t['games'] }}</span>
+  </a>
+</footer>
+
+<!-- ================= Scripts ================= -->
+
+<!-- MediaPipe Hands library -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.min.js"></script>
+
+<!-- Exercise 3 main logic -->
+<script src="{{ url_for('static', filename='exercise_3.js') }}?v=99"></script>
+
+<!-- Theme handling (light/dark) -->
+<script src="/static/theme.js"></script>
+
+</body>
+</html>

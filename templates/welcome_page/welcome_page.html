@@ -1,0 +1,72 @@
+<!DOCTYPE html> 
+<html lang="{{ lang }}"> <!-- Root HTML element; sets page language dynamically from Flask session (el/en) -->
+<head> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> 
+  <meta charset="UTF-8"> 
+
+  <title>{{ t['welcome_title'] }} - Hand Exercises</title> 
+  <link rel="manifest" href="/manifest.webmanifest"> <!-- Links the PWA manifest file for installable web app behavior -->
+
+  <meta name="theme-color" content="#007bff"> <!-- Sets the browser UI theme color on mobile/PWA (address bar color) -->
+
+  <link rel="stylesheet" href="/static/style_welcome_page.css"> 
+</head>
+
+<body> 
+
+  <!-- 🌍 Language switcher (top-right) -->
+  <form action="{{ url_for('change_language') }}" method="POST" class="lang-switcher"> <!-- Form that POSTs to change_language route to update user language -->
+    <select name="language" onchange="this.form.submit()"> <!-- Dropdown; auto-submits form whenever the selection changes -->
+      <option value="el" {% if lang == 'el' %}selected{% endif %}>🇬🇷 {{ t['greek'] }}</option> <!-- Greek option; selected if current lang == el -->
+      <option value="en" {% if lang == 'en' %}selected{% endif %}>🇬🇧 {{ t['english'] }}</option> <!-- English option; selected if current lang == en -->
+    </select> 
+  </form> 
+
+  <div class="container"> <!-- Main wrapper container used for layout/centering -->
+
+    <!-- Welcome text -->
+    <div class="welcome"> <!-- Section that contains the main welcome heading -->
+      <h1>{{ t['welcome_title'] }}</h1> <!-- Large welcome heading text (translated) -->
+    </div> <!-- End welcome section -->
+
+    <!-- Image -->
+    <div class="image-box"> <!-- Container for decorative background + the welcome image -->
+      <div class="circle-bg"></div> <!-- Decorative circle background (styled in CSS) -->
+      <img
+        src="/static/image_welcome_page/images_step1.png" <!-- Image path for welcome illustration -->
+        alt="{{ t['welcome_image_alt'] }}" <!-- Accessible alternative text for screen readers (translated) -->
+      >
+    </div> <!-- End image section -->
+
+    <!-- Content -->
+    <div class="box"> <!-- Box container for subtitle + button -->
+      <div class="content"> <!-- Text content wrapper -->
+        <h2>Hand Exercises</h2> <!-- Secondary title; currently hardcoded (could be translated if you want) -->
+        <p><b>{{ t['welcome_subtitle'] }}</b></p> <!-- Subtitle text (translated), bolded -->
+      </div> <!-- End content wrapper -->
+
+      <!-- Button -->
+      <div class="button-box"> <!-- Wrapper for the start button styling -->
+        <a href="{{ url_for('index') }}" class="btn"> <!-- Link styled as a button; goes to index (login/start) page -->
+          {{ t['start'] }} <!-- Button label (translated) -->
+        </a> <!-- End button link -->
+      </div> <!-- End button wrapper -->
+    </div> <!-- End content box -->
+
+  </div> <!-- End main container -->
+
+<script> <!-- Begin JavaScript block -->
+if ("serviceWorker" in navigator) { // Check if the browser supports Service Workers (required for PWA offline/cache features)
+  window.addEventListener("load", () => { // Wait until the page fully loads before registering the service worker
+    navigator.serviceWorker
+      .register("/service-worker.js") // Register the service worker located at the site root
+      .then(reg => { // If registration succeeds...
+        console.log("✅ SW registered with scope:", reg.scope); // Log the service worker scope for debugging
+      })
+      .catch(err => console.error("❌ SW error", err)); // If registration fails, log the error
+  });
+}
+</script> 
+
+</body> 
+</html> 

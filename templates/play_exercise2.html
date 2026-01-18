@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8" content="width=device-width, initial-scale=1.0">
+
+  <title>{{ t['exercise_1_title'] }}</title>
+  <link rel="stylesheet" href="/static/exercises_style.css">
+  <style>
+    
+    canvas { width: 100%; max-width: 520px; border-radius: 12px; border: 1px solid #ccc; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    button { padding:10px 14px; border-radius:10px; border:0; background:#00308F; color:#fff; }
+    button:disabled { opacity:0.6; }
+    video{
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+  </style>
+
+</head>
+
+<body data-username="{{ session.get('username', 'Guest') }}"
+  data-age="{{ session.get('age', 0) }}">
+
+<!-- 🔝 NavBar -->
+<nav class="navbar">
+
+  <div class="user-icon">
+    {% if 'username' in session %}
+      <a href="{{ url_for('profile', username=session['username']) }}" class="nav-profile-icon">
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ (session.get('avatar') if session.get('avatar') else 'group_of_people.png')) }}"
+          class="nav-avatar"
+          alt="{{ t['profile_alt'] }}">
+      </a>
+    {% else %}
+      <a href="{{ url_for('profile', username=session['username']) }}">
+        <img src="/static/menu_images/User.png" alt="{{ t['user_alt'] }}" />
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="theme-toggle-icon" onclick="toggleTheme()">
+    🌓
+  </div>
+</nav>
+
+
+
+<body data-username="{{ session.get('username','Guest') }}"
+      data-age="{{ session.get('age',0) }}">
+
+<h2>{{ t['exercise_2_title'] }}</h2>
+
+<video id="cam" playsinline></video>
+<canvas id="gameCanvas" width="600" height="600"></canvas>
+
+<div class="row">
+  <button id="startBtn">Έναρξη</button>
+  <button id="restartBtn" disabled>Restart</button>
+  <button id="stopBtn" disabled>Stop</button>
+</div>
+
+<div id="status"></div>
+
+<!-- 🔻 Footer Navigation -->
+<footer class="bottom-navbar">
+  <a href="{{ url_for('today') }}" class="nav-item active">
+    <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+    <span>{{ t['today'] }}</span>
+  </a>
+
+  <a href="{{ url_for('dashboard') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/statistic.png') }}" alt="{{ t['stats'] }}">
+    <span>{{ t['stats'] }}</span>
+  </a>
+
+  <a href="{{ url_for('menu') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/games.png') }}" alt="{{ t['games'] }}">
+    <span>{{ t['games'] }}</span>
+  </a>
+</footer>
+<!-- MediaPipe Hands -->
+ <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.min.js"></script>
+
+<script src="{{ url_for('static', filename='exercise_2.js') }}?v=99"></script>
+
+
+  
+
+  
+<script src="/static/theme.js"></script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+
+  <title>{{ t['step1_title'] }}</title>
+  <link rel="stylesheet" href="/static/style_sign_up_page.css">
+</head>
+
+<body>
+
+ 
+
+  <h2>{{ t['step1_question_age'] }}</h2>
+
+  <form action="{{ url_for('save_step1') }}" method="post">
+    <input
+      type="number"
+      name="age"
+      min="18"
+      max="100"
+      required
+      placeholder="{{ t['age_placeholder'] }}"
+    >
+
+    <div class="nav-arrows">
+      <a href="{{ url_for('index') }}" class="arrow">
+        <img src="/static/hand/arrow-left.png" alt="{{ t['back'] }}">
+      </a>
+
+      <button type="submit" class="arrow-btn">
+        <img src="/static/hand/arrow-right.png" alt="{{ t['next'] }}">
+      </button>
+    </div>
+  </form>
+
+</body>
+</html>

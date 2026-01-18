@@ -1,0 +1,1052 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 80px; 
+}
+
+.stats-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #4CAF50;
+}
+
+.highlight {
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.exercise-card {
+  background: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-left: 5px solid #4CAF50;
+  border-radius: 8px;
+}
+
+.summary {
+  background: #e0f7fa;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.retry {
+  background-color: #f44336;
+  color: white;
+}
+
+.continue {
+  background-color: #4CAF50;
+  color: white;
+}
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+.nav-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover; /* κάνει crop σωστά */
+    border: 2px solid white;
+}
+
+
+.navbar {
+  height: 60px;
+  background: #706464;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(2, 2, 2, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar img {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.social {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* 🔗 Links */
+.navbar a {
+  text-decoration: none;
+  color: inherit;
+}
+/* ------------ LIGHT MODE (default) ------------ */
+body.light-mode {
+    background-color: #ffffff !important;
+    color: #222 !important;
+}
+
+/* ------------ DARK MODE ------------ */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e6e6e6 !important;
+}
+
+/* NAVIGATION BARS */
+.dark-mode .navbar {
+    background-color: #1c1c1c !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.dark-mode .bottom-navbar {
+    background-color: #332c2c!important;
+    border-top: 1px solid #333 !important;
+}
+
+.dark-mode .nav-item {
+    color: #e6e6e6 !important;
+}
+
+.dark-mode .nav-item.active {
+    background-color: #333 !important;
+}
+
+/* EXERCISE BOXES */
+.dark-mode .exercise-box {
+    background-color: #2a2a2a !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+.dark-mode .exercise-box:hover {
+    background-color: #3a3a3a !important;
+}
+
+/* TITLES */
+.dark-mode h1 {
+    color: #f1f1f1 !important;
+}
+
+.dark-mode h1::after {
+    background: #6c5ce7 !important;
+}
+
+/* OPTIONAL: Image adjustment */
+.dark-mode img {
+    filter: brightness(0.9);
+}
+
+/* Smooth transitions */
+body, .navbar, .bottom-navbar, .exercise-box, h1 {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+/* ===== Bottom Navbar - Fix text + icons in dark mode ===== */
+
+.dark-mode .bottom-navbar .nav-item span {
+    color: white !important;
+}
+
+ 
+body.dark-mode .bottom-navbar .nav-item img {
+  filter: invert(1) brightness(1.15) !important;
+  transition: filter 0.2s ease;
+}
+
+/* Active button (container) */
+body.dark-mode .bottom-navbar .nav-item.active {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* Active text */
+body.dark-mode .bottom-navbar .nav-item.active span {
+  color: white !important;
+}
+
+/* Active icon  */
+body.dark-mode .bottom-navbar .nav-item.active img {
+  filter: invert(1) brightness(1.25) !important;
+}
+
+
+.theme-toggle-icon {
+    font-size: 26px;
+    cursor: pointer;
+    margin-left: 10px;
+    user-select: none;
+}
+/* --- NEW MOBILE APP STYLE BOTTOM BAR --- */
+
+
+
+
+.dark-mode .bottom-navbar {
+    background: rgba(28, 28, 28, 0.9);
+    border-top: 1px solid #444;
+    backdrop-filter: blur(14px);
+}
+
+
+/* ICONS */
+/* BIGGER bottom navbar icons */
+
+
+
+
+
+/* --- Fix big spacing on phones --- */
+body {
+    padding-bottom: 90px !important;
+}
+/* === Mobile friendly Statistics styling === */
+.export-btn{
+  display:none;
+  margin: 15px auto;
+  padding: 10px 20px;
+  background:#007bff;
+  color:white;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+.stats-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 10px 0 5px 0;
+}
+
+.stats-subtitle {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+
+/* --- MOBILE FRIENDLY GAME STATISTICS TABLE --- */
+
+.stats-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 10px;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.stats-table th {
+    background: #f0f0f0;
+    padding: 10px 5px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    white-space: nowrap;
+}
+
+.stats-table td {
+    padding: 8px 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 0.75rem;
+}
+.nav-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+}
+
+/* Alternating row color */
+.stats-table tr:nth-child(even) {
+    background: #fafafa;
+}
+/* ===== PDF MODAL ===== */
+
+.pdf-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.pdf-modal.hidden {
+  display: none;
+}
+
+.pdf-modal-content {
+  background: #ffffff;
+  padding: 20px 18px;
+  border-radius: 12px;
+  max-width: 340px;
+  width: 90%;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.pdf-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+}
+
+.pdf-modal-content p {
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.pdf-modal-content label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.pdf-modal-content input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.pdf-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+  gap: 8px;
+}
+
+#pdf-cancel, #pdf-submit {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#pdf-cancel {
+  background: #f1f1f1;
+  color: #555;
+}
+
+#pdf-submit {
+  background: #007bff;
+  color: white;
+}
+
+
+/* ===== PDF REPORT STYLING ===== */
+/* PDF CONTENT ALWAYS WHITE */
+
+  
+
+.pdf-game-title {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  padding: 5px 10px;
+  background: #f0f4ff;
+  border-left: 4px solid #007bff;
+  border-radius: 6px;
+}
+
+
+.pdf-result-card {
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: #ffffff;
+}
+
+.pdf-result-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.pdf-result-index {
+  font-weight: 600;
+}
+
+.pdf-result-date {
+  font-style: italic;
+}
+
+.pdf-result-body {
+  font-size: 0.9rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 10px;
+}
+
+
+
+
+.pdf-report {
+    background: white !important;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+
+.pdf-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #222;
+}
+
+
+.pdf-patient-info {
+    background: #f6f9ff;
+    padding: 18px;
+    border-left: 5px solid #007bff;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+
+.pdf-divider {
+    margin: 25px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+
+.pdf-section-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #333;
+}
+
+
+.pdf-game-title {
+    background: #e8f0ff;
+    padding: 8px 12px;
+    border-left: 4px solid #007bff;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #222;
+}
+
+
+.pdf-result-card {
+    background: #fefefe;
+    border: 1px solid #e5e5e5;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.pdf-result-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #555;   
+    margin-bottom: 6px;
+}
+
+.pdf-result-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.stats-table th,
+.stats-table td,
+.stats-table-wrapper table th,
+.stats-table-wrapper table td {
+    color: #000 !important;
+}
+
+/* ========== TheraHand Bot Widget ========== */
+
+#thera-bot-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 90px; 
+    z-index: 99999;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Floating button */
+.bot-toggle-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+}
+
+.bot-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+    background: #0063cc;
+}
+
+
+.bot-window {
+    position: absolute;
+    right: 0;
+    bottom: 70px;
+    width: 340px;
+    max-height: 480px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.bot-hidden {
+    display: none;
+}
+
+/* Header */
+.bot-header {
+    padding: 10px 12px;
+    background: #f5f7fb;
+    border-bottom: 1px solid #e0e3f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bot-header-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bot-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #6c5ce7);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bot-status {
+    font-size: 11px;
+    color: #4caf50;
+}
+
+.bot-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Bot message */
+.bot-messages {
+    flex: 1;
+    padding: 10px 10px 5px 10px;
+    overflow-y: auto;
+    background: #f9fafc;
+}
+
+/* Message bubble*/
+.bot-bubble {
+    max-width: 80%;
+    padding: 8px 10px;
+    border-radius: 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Bot message */
+.bot-bubble.bot {
+    background: #e6ecff;
+    color: #222;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+/* User message */
+.bot-bubble.user {
+    background: #007bff;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+
+.bot-message-row {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Input bar */
+.bot-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 8px;
+    border-top: 1px solid #e0e3f0;
+    background: #fff;
+}
+
+.bot-input-bar input {
+    flex: 1;
+    border-radius: 20px;
+    border: 1px solid #d0d4e3;
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+}
+
+.bot-input-bar input:focus {
+    border-color: #007bff;
+}
+
+/* Buttons  input bar */
+.bot-voice-btn,
+.bot-send-btn {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-voice-btn {
+    background: #f0f2ff;
+    font-size: 16px;
+}
+
+.bot-send-btn {
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Voice status */
+.bot-voice-status {
+    min-height: 16px;
+    font-size: 11px;
+    color: #666;
+    padding: 0 10px 6px 10px;
+}
+/* Bigger text ONLY in bottom navbar */
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+
+/* ===================================================== */
+/* FIX: Bottom Navbar icons/text EXACTLY like menu.css   */
+/* (Only affects bottom navbar – nothing else changes)   */
+/* ===================================================== */
+/* NAVIGATION BARS */
+.dark-mode .navbar {
+    background-color: #1c1c1c !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.dark-mode .bottom-navbar {
+    background-color: #332c2c !important;
+    border-top: 1px solid #333 !important;
+}
+
+.dark-mode .nav-item {
+    color: #e6e6e6 !important;
+}
+
+.dark-mode .nav-item.active {
+    background-color: #333 !important;
+}
+/* Smooth transitions */
+body, .navbar, .bottom-navbar, .exercise-box, h1 {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+/* ===== Bottom Navbar - Fix text + icons in dark mode ===== */
+
+.dark-mode .bottom-navbar .nav-item span {
+    color: white !important;
+}
+
+
+body.dark-mode .bottom-navbar .nav-item img {
+  filter: invert(1) brightness(1.15) !important;
+  transition: filter 0.2s ease;
+}
+
+/* Active button (container) */
+body.dark-mode .bottom-navbar .nav-item.active {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* Active text */
+body.dark-mode .bottom-navbar .nav-item.active span {
+  color: white !important;
+}
+
+/* Active icon  */
+body.dark-mode .bottom-navbar .nav-item.active img {
+  filter: invert(1) brightness(1.25) !important;
+}
+
+/* ================================ */
+/* Bottom Navbar – match Menu.css   */
+/* ================================ */
+
+/* ===================================================== */
+/* FIX Bottom Navbar layout: icon ABOVE text (like Menu) */
+/* ===================================================== */
+
+.bottom-navbar .nav-item{
+  display: flex !important;
+  flex-direction: column !important;   
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;                 
+  text-align: center !important;
+}
+
+/* icon */
+.bottom-navbar .nav-item img{
+  display: block !important;
+  width: 30px !important;
+  height: 24px !important;
+  margin: 0 !important;                
+}
+
+/* label  icon */
+.bottom-navbar .nav-item span,
+.bottom-navbar .nav-item{
+  line-height: 1.1 !important;
+}
+
+.bottom-navbar .nav-item span{
+  display: block !important;            
+  margin: 0 !important;
+  font-size: 20px !important;           
+  font-weight: 400 !important;          
+}
+.bottom-navbar .nav-item{
+  text-decoration: none !important;
+}
+
+.bottom-navbar .nav-item span{
+  text-decoration: none !important;
+}
+
+/* ========================================================= */
+/* FINAL OVERRIDE: Bottom Navbar exactly like Menu.css        */
+/* (Only affects bottom navbar)                               */
+/* ========================================================= */
+
+:root{ --bottom-nav-h: 70px; }
+
+
+body{
+  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom)) !important;
+}
+
+
+.bottom-navbar{
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+
+  height: var(--bottom-nav-h) !important;
+  z-index: 9999 !important;
+
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+
+  background-color: #ffffff !important;
+  border-top: 1px solid #ddd !important;
+
+  padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+
+.bottom-navbar .nav-item{
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  font-weight: 400 !important;
+}
+
+/* default (desktop/tablet)  */
+.bottom-navbar .nav-item img{
+  width: 30px !important;
+  height: 24px !important;
+  margin-bottom: 4px !important;
+  display: block !important;
+}
+
+.bottom-navbar .nav-item span{
+  display: block !important;
+  font-size: 20px !important;
+  line-height: 1.1 !important;
+  text-decoration: none !important;
+}
+/* =============================== */
+/* Remove active grey background    */
+/* ONLY in bottom navbar            */
+/* =============================== */
+
+.bottom-navbar .nav-item.active{
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+body.dark-mode .bottom-navbar .nav-item.active{
+  background: transparent !important;
+}
+
+
+@media (max-width: 600px){
+  .bottom-navbar .nav-item img{
+    width: 36px !important;
+    height: 30px !important;
+  }
+  .bottom-navbar .nav-item span{
+    font-size: 16px !important;
+  }
+}
+
+/* dark mode  */
+body.dark-mode .bottom-navbar{
+  background-color: #332c2c !important;
+  border-top: 1px solid #333 !important;
+}
+
+body.dark-mode .bottom-navbar .nav-item{
+  color: #e6e6e6 !important;
+}
+
+body.dark-mode .bottom-navbar .nav-item img{
+  filter: invert(1) brightness(1.15) !important;
+}
+/* ✅ Light mode:black bottom nav bar */
+body:not(.dark-mode) .bottom-navbar .nav-item,
+body:not(.dark-mode) .bottom-navbar .nav-item span {
+  color: #000 !important;
+}
+
+/*  responsive */
+@media (max-width: 480px) {
+    .bot-window {
+        width: 100vw;
+        right: -10px;
+        border-radius: 18px 18px 0 0;
+    }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  
+  .bottom-navbar .nav-item{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+
+    font-size: 16px !important;
+    font-weight: 400 !important;
+  }
+
+  .bottom-navbar .nav-item span{
+    font-weight: 400 !important;
+  }
+
+  .bottom-navbar .nav-item img{
+    width: 36px !important;
+    height: 30px !important;
+  }
+
+  .pdf-result-body {
+    grid-template-columns: 1fr;
+  }
+
+  body { font-size: 18px; }
+  h1 { font-size: 26px; }
+
+  .stats-container { width: 95%; padding: 16px; }
+  .exercise-card { font-size: 18px; padding: 18px; }
+  .summary { font-size: 18px; }
+
+  button {
+    width: 48%;
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+  
+
+
+
+
+@media print {
+  
+    .stats-table-wrapper {
+        display: none !important;
+    }
+
+
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 16px;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    h3 {
+        background: #f0f0f0;
+        padding: 6px 10px;
+        border-left: 4px solid #007bff;
+        margin-top: 25px;
+    }
+
+    table {
+        border-collapse: collapse !important;
+        margin-bottom: 20px;
+        width: 100% !important;
+    }
+
+    table th {
+        background: #007bff !important;
+        color: white !important;
+        padding: 8px;
+        font-weight: bold;
+    }
+
+    table td {
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background: #f9f9f9 !important;
+    }
+}
+

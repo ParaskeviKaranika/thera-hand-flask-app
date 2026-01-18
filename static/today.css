@@ -1,0 +1,540 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 80px; 
+}
+
+/* 🧭 Navbar */
+.navbar {
+  height: 60px;
+  background: #706464;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(2, 2, 2, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar img {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.social {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+}
+.nav-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover; /* κάνει crop σωστά */
+    border: 2px solid white;
+}
+
+
+/* 🔗 Links */
+.navbar a {
+  text-decoration: none;
+  color: inherit;
+}
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #0b0505;
+  font-size: 20px;
+}
+.container {
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.header .green {
+  color: #e1c049;
+}
+
+.week {
+  display: flex;
+  justify-content: space-between;
+  background: #1c1818;
+  border-radius: 12px;
+  padding: 10px 15px;
+  margin: 20px 0;
+}
+
+.day {
+  text-align: center;
+  flex: 1;
+  color: #aaa;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  margin: 5px auto 0;
+}
+
+.active {
+  color: #fff;
+}
+
+.active .circle {
+  background-color: #f8f41c;
+  border-color: #d9dad9;
+}
+
+.tasks h2 {
+  margin-bottom: 10px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+}
+
+.task-icon {
+  font-size: 28px;
+  margin-right: 15px;
+}
+
+.task-info h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.task-info span {
+  font-size: 14px;
+  color: #ff914d;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: #8fb1a3;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 18px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #00a65a;
+}
+
+.nav-item img {
+  width: 30px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+/* ------------ LIGHT MODE (default) ------------ */
+body.light-mode {
+    background-color: #ffffff !important;
+    color: #222 !important;
+}
+
+/* ------------ DARK MODE ------------ */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e6e6e6 !important;
+}
+
+/* NAVIGATION BARS */
+.dark-mode .navbar {
+    background-color: #1c1c1c !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.dark-mode .bottom-navbar {
+    background-color:#332c2c !important;
+    border-top: 1px solid #333 !important;
+}
+
+.dark-mode .nav-item {
+    color: #e6e6e6 !important;
+}
+
+.dark-mode .nav-item.active {
+    background-color: #333 !important;
+}
+
+/* EXERCISE BOXES */
+.dark-mode .exercise-box {
+    background-color: #2a2a2a !important;
+    color: white !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+}
+
+.dark-mode .exercise-box:hover {
+    background-color: #3a3a3a !important;
+}
+
+/* TITLES */
+.dark-mode h1 {
+    color: #f1f1f1 !important;
+}
+
+.dark-mode h1::after {
+    background: #6c5ce7 !important;
+}
+
+/* OPTIONAL: Image adjustment */
+.dark-mode img {
+    filter: brightness(0.9);
+}
+
+/* Smooth transitions */
+body, .navbar, .bottom-navbar, .exercise-box, h1 {
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+/* ===== Bottom Navbar - Fix text + icons in dark mode ===== */
+
+.dark-mode .bottom-navbar .nav-item span {
+    color: white !important;
+}
+
+/* Icon filter */
+body.dark-mode .bottom-navbar .nav-item img {
+  filter: invert(1) brightness(1.15) !important;
+  transition: filter 0.2s ease;
+}
+
+/* Active button (container) */
+body.dark-mode .bottom-navbar .nav-item.active {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* Active text */
+body.dark-mode .bottom-navbar .nav-item.active span {
+  color: white !important;
+}
+
+/* Active icon  */
+body.dark-mode .bottom-navbar .nav-item.active img {
+  filter: invert(1) brightness(1.25) !important;
+}
+
+
+
+.theme-toggle-icon {
+    font-size: 26px;
+    cursor: pointer;
+    margin-left: 10px;
+    user-select: none;
+}
+/* ========== TheraHand Bot Widget ========== */
+
+#thera-bot-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 90px; 
+    z-index: 99999;
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Floating toggle button */
+.bot-toggle-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s;
+}
+
+.bot-toggle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.3);
+    background: #0063cc;
+}
+
+/* Bot window */
+.bot-window {
+    position: absolute;
+    right: 0;
+    bottom: 70px;
+    width: 340px;
+    max-height: 480px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.bot-hidden {
+    display: none;
+}
+
+/* Header */
+.bot-header {
+    padding: 10px 12px;
+    background: #f5f7fb;
+    border-bottom: 1px solid #e0e3f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bot-header-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bot-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #6c5ce7);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bot-status {
+    font-size: 11px;
+    color: #4caf50;
+}
+
+.bot-close-btn {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Messages area*/
+.bot-messages {
+    flex: 1;
+    padding: 10px 10px 5px 10px;
+    overflow-y: auto;
+    background: #f9fafc;
+}
+
+/* Message bubble */
+.bot-bubble {
+    max-width: 80%;
+    padding: 8px 10px;
+    border-radius: 14px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Bot message */
+.bot-bubble.bot {
+    background: #e6ecff;
+    color: #222;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+}
+
+/* User message */
+.bot-bubble.user {
+    background: #007bff;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+}
+
+/* Message row */
+.bot-message-row {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Input bar */
+.bot-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 8px;
+    border-top: 1px solid #e0e3f0;
+    background: #fff;
+}
+
+.bot-input-bar input {
+    flex: 1;
+    border-radius: 20px;
+    border: 1px solid #d0d4e3;
+    padding: 8px 10px;
+    font-size: 13px;
+    outline: none;
+}
+
+.bot-input-bar input:focus {
+    border-color: #007bff;
+}
+
+/* Buttons στην input bar */
+.bot-voice-btn,
+.bot-send-btn {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bot-voice-btn {
+    background: #f0f2ff;
+    font-size: 16px;
+}
+
+.bot-send-btn {
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Voice status */
+.bot-voice-status {
+    min-height: 16px;
+    font-size: 11px;
+    color: #666;
+    padding: 0 10px 6px 10px;
+}
+/*Fix the active nav bar */
+.bottom-navbar .nav-item.active,
+.bottom-navbar .nav-item.active span {
+  color: #000 !important;  /* Light mode: black */
+}
+
+/* Dark mode  */
+body.dark-mode .bottom-navbar .nav-item.active,
+body.dark-mode .bottom-navbar .nav-item.active span {
+  color: #fff !important;
+}
+
+/* responsive */
+@media (max-width: 480px) {
+    .bot-window {
+        width: 100vw;
+        right: -10px;
+        border-radius: 18px 18px 0 0;
+    }
+}
+
+@media (max-width: 600px) {
+  /* navbar */
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  .navbar img {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* υπόλοιπα στοιχεία */
+  body {
+    font-size: 18px;
+  }
+  .header h1 {
+    font-size: 26px;
+  }
+  .header p {
+    font-size: 18px;
+  }
+  .week {
+    padding: 12px;
+    margin: 10px 0;
+  }
+  .day {
+    font-size: 16px;
+  }
+  .circle {
+    width: 24px;
+    height: 24px;
+  }
+  .task {
+    flex-direction: row;
+    align-items: center;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .task-icon {
+    font-size: 34px;
+    margin-right: 18px;
+  }
+  .task-info h3 {
+    font-size: 20px;
+  }
+  .task-info span {
+    font-size: 16px;
+  }
+  .nav-item {
+    font-size: 16px;
+  }
+  .nav-item img {
+    width: 36px;
+    height: 30px;
+  }
+}

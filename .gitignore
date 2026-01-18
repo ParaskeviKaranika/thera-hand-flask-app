@@ -1,0 +1,26 @@
+# env files
+.env
+*.env
+.flaskenv
+app.env
+data.env
+
+# python
+__pycache__/
+*.pyc
+
+# local databases
+*.db
+
+# build artifacts
+build/
+dist/
+
+# editor
+.vscode/
+# virtual environments
+venv/
+myenv/
+hand_exercises/myenv/
+**/myenv/
+**/venv/

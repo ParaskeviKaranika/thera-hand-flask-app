@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <title>{{ t['exercise_2'] }}</title>
+  <link rel="stylesheet" href="/static/exercises_style.css">
+</head>
+
+<body>
+
+<!-- 🔝 NavBar -->
+<nav class="navbar">
+
+  <div class="user-icon">
+    {% if 'username' in session %}
+      <a href="{{ url_for('profile', username=session['username']) }}" class="nav-profile-icon">
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ (session.get('avatar') if session.get('avatar') else 'group_of_people.png')) }}"
+          class="nav-avatar"
+          alt="{{ t['profile_alt'] }}">
+      </a>
+    {% else %}
+      <a href="{{ url_for('profile', username=session['username']) }}">
+        <img src="/static/menu_images/User.png" alt="{{ t['user_alt'] }}" />
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="theme-toggle-icon" onclick="toggleTheme()">🌓</div>
+</nav>
+
+<h1>{{ t['exercise_2'] }}</h1>
+
+<div class="exercise-box">
+  <!-- 📷 Εικόνα άσκησης -->
+  <div class="exercise-header">
+    <div class="exercise-image">
+      <img src="/static/exercise_images/grab_shapes.png" alt="{{ t['exercise_image_alt'] }}" />
+    </div>
+
+    <!-- 🟢 Κουτάκι δυσκολίας -->
+    <div class="difficulty-box">
+      <img src="/static/exercise_images/difficulty.png" alt="{{ t['difficulty_icon_alt'] }}" />
+      <div class="difficulty-text">
+        {{ t['difficulty_label'] }}<br><span>{{ t['difficulty_low'] }}</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>{{ t['exercise_description_h2'] }}</h2><br>
+
+  <p>{{ t['exercise_2_p1'] }}</p>
+  <p>{{ t['exercise_2_p2'] }}</p><br>
+
+  <h3>{{ t['exercise_goal_benefits_h3'] }}</h3>
+  <p>{{ t['exercise_2_p3'] | safe }}</p>
+
+  <h3>{{ t['instructions_h3'] }}</h3>
+  <p>{{ t['exercise_2_instructions'] | safe }}</p>
+
+  <form method="post" action="/start/2">
+    <a class="continue-btn" href="{{ url_for('play_exercise', ex_id=2) }}">{{ t['continue'] }}</a>
+
+  </form>
+</div>
+
+<!-- ✅ TheraHand Chat Bot Widget -->
+<div id="thera-bot-widget">
+  <button id="thera-bot-toggle" class="bot-toggle-btn" aria-label="{{ t['bot_open_aria'] }}">💬</button>
+
+  <div id="thera-bot-window" class="bot-window bot-hidden">
+    <div class="bot-header">
+      <div class="bot-header-info">
+        <div class="bot-avatar">TH</div>
+        <div>
+          <div class="bot-title">{{ t['bot_title'] }}</div>
+          <div class="bot-status">{{ t['bot_status_available'] }}</div>
+        </div>
+      </div>
+      <button class="bot-close-btn" id="thera-bot-close" aria-label="{{ t['close'] }}">✕</button>
+    </div>
+
+    <div class="bot-messages" id="thera-bot-messages"></div>
+
+    <div class="bot-input-bar">
+      <button id="thera-bot-voice" class="bot-voice-btn" title="{{ t['bot_voice_title'] }}">🎤</button>
+      <input id="thera-bot-input" type="text" placeholder="{{ t['bot_input_placeholder'] }}" autocomplete="off">
+      <button id="thera-bot-send" class="bot-send-btn" aria-label="{{ t['send'] }}">➤</button>
+    </div>
+
+    <div class="bot-voice-status" id="thera-bot-voice-status"></div>
+  </div>
+</div>
+
+<!-- 🔻 Footer Navigation -->
+<footer class="bottom-navbar">
+  <a href="{{ url_for('today') }}" class="nav-item active">
+    <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+    <span>{{ t['today'] }}</span>
+  </a>
+
+  <a href="{{ url_for('dashboard') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/statistic.png') }}" alt="{{ t['stats'] }}">
+    <span>{{ t['stats'] }}</span>
+  </a>
+
+  <a href="{{ url_for('menu') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/games.png') }}" alt="{{ t['games'] }}">
+    <span>{{ t['games'] }}</span>
+  </a>
+</footer>
+
+<script src="/static/theme.js"></script>
+<script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+</body>
+</html>

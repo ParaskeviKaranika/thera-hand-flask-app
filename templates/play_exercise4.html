@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <!-- Responsive viewport (supports mobile + notch-safe areas) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <!-- Character encoding -->
+  <meta charset="UTF-8">
+
+  <!-- Page title (localized via translations) -->
+  <title>{{ t.get('exercise_4_title','Exercise 4') }}</title>
+
+  <!-- Shared styles for all exercises -->
+  <link rel="stylesheet" href="/static/exercises_style.css">
+
+  <style>
+    /* Main centered container */
+    .wrap{
+      max-width:520px;
+      margin:12px auto;
+      padding:10px;
+    }
+
+    /* Game canvas styling */
+    canvas{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #ccc;
+      display:block;
+    }
+
+    /* Button row layout */
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    /* Button appearance */
+    button{
+      padding:10px 14px;
+      border-radius:10px;
+      border:0;
+      background:#00308F;
+      color:#fff;
+    }
+
+    /* Disabled button state */
+    button:disabled{
+      opacity:0.6;
+    }
+
+    /*
+      Hidden video element:
+      - Required by MediaPipe Hands as a live camera source
+      - Must NOT be display:none (can break camera frames on some browsers)
+      - Moved off-screen instead
+    */
+    video{
+      position:absolute;
+      left:-9999px;
+      width:1px;
+      height:1px;
+      opacity:0;
+    }
+
+    /* Optional status/info text under the canvas */
+    #status{
+      margin-top:10px;
+      font-weight:600;
+    }
+  </style>
+</head>
+
+<!--
+  User/session data is passed to JavaScript via data-* attributes.
+  This allows JS to read username, age and language without extra API calls.
+-->
+<body
+  data-username="{{ session.get('username','Guest') }}"
+  data-age="{{ session.get('age',0) }}"
+  data-lang="{{ lang }}"
+>
+
+<!--
+  i18n dictionary for Exercise 4.
+  This JSON is read by exercise_4.js and provides:
+  - UI labels (restart, exit, time, reps)
+  - Exercise instructions
+  - Exercise names (finger movements)
+  All text is localized (Greek / English).
+-->
+<script id="i18n" type="application/json">
+{
+  "game4_title": {{ t.get("game4_title","Exercise 4")|tojson }},
+  "game4_restart": {{ t.get("game4_restart","Restart")|tojson }},
+  "game4_exit": {{ t.get("game4_exit","Exit")|tojson }},
+  "game4_time": {{ t.get("game4_time","Time: {seconds}s")|tojson }},
+  "game4_reps": {{ t.get("game4_reps","Reps: {reps}/{target}")|tojson }},
+  "game4_instruction": {{ t.get("game4_instruction","Instruction: {instruction}")|tojson }},
+  "game4_ex_completed": {{ t.get("game4_ex_completed","Completed!")|tojson }},
+  "game4_all_done": {{ t.get("game4_all_done","All done!")|tojson }},
+  "game4_exit_msg": {{ t.get("game4_exit_msg","Exiting...")|tojson }},
+  "game4_level": {{ t.get("game4_level","Level: {level}/5")|tojson }},
+
+  /* Localized exercise names (finger movements) */
+  "game4_ex_close_all_fingers": {{ t.get("game4_ex_close_all_fingers","")|tojson }},
+  "game4_ex_open_only_thumb": {{ t.get("game4_ex_open_only_thumb","")|tojson }},
+  "game4_ex_close_index_thumb": {{ t.get("game4_ex_close_index_thumb","")|tojson }},
+  "game4_ex_close_thumb_index_middle": {{ t.get("game4_ex_close_thumb_index_middle","")|tojson }},
+  "game4_ex_close_only_thumb": {{ t.get("game4_ex_close_only_thumb","")|tojson }}
+}
+</script>
+
+<div class="wrap">
+  <!-- Exercise title -->
+  <h2>{{ t.get('exercise_4_title','Exercise 4') }}</h2>
+
+  <!-- Hidden camera input for MediaPipe -->
+  <video id="cam" playsinline></video>
+
+  <!-- Main game canvas (all rendering happens here) -->
+  <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+  <!-- Game control buttons -->
+  <div class="row">
+    <!-- Start button (text may be overridden by JS via i18n) -->
+    <button id="startBtn">{{ t.get("start_btn","Έναρξη") }}</button>
+
+    <!-- Restart button (enabled after start) -->
+    <button id="restartBtn" disabled>
+      {{ t.get("game4_restart","Restart") }}
+    </button>
+
+    <!-- Exit / Stop button (closes camera and ends exercise) -->
+    <button id="stopBtn" disabled>
+      {{ t.get("game4_exit","Exit") }}
+    </button>
+  </div>
+
+  <!-- Optional status/debug text (can be empty during normal gameplay) -->
+  <div id="status">OK</div>
+</div>
+
+<!-- MediaPipe Hands library -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.min.js"></script>
+
+<!-- Exercise 4 game logic -->
+<script src="{{ url_for('static', filename='exercise_4.js') }}?v=999"></script>
+
+<!-- Theme toggle (light / dark mode) -->
+<script src="/static/theme.js"></script>
+
+</body>
+</html>

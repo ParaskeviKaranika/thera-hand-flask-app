@@ -1,0 +1,11 @@
+Flask
+gunicorn
+psycopg2-binary
+python-dotenv
+Flask-Mail
+APScheduler
+bcrypt
+pytz
+reportlab
+Werkzeug
+itsdangerous
