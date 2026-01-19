@@ -165,10 +165,10 @@ class PG:
     def __init__(self, dsn: str):
         self.connection = PostgresConnection(dsn)
 
-# ✅ Κρατάμε το ίδιο όνομα "mysql" για να ΜΗΝ αλλάξεις routes
+# ✅ keep the same name "mysql"
 mysql = PG(DATABASE_URL)
 
-# ✅ Fake MySQLdb.cursors.DictCursor για να μη πειράξεις τα routes
+# ✅ Fake MySQLdb.cursors.DictCursor dont change the routes
 class MySQLdb:
     class cursors:
         DictCursor = object()
@@ -266,7 +266,7 @@ def index():
 
 
 # -------------------------------------------------------------------
-# 3️⃣ Προφίλ χρήστη
+# 3️⃣ Profile user
 # -------------------------------------------------------------------
 @app.route('/profile')
 def profile():
@@ -275,7 +275,7 @@ def profile():
 
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    # 🔑 Φόρτωσε χρήστη με ID (σταθερό)
+    # 🔑 id 
     cursor.execute("SELECT * FROM users WHERE id = %s", (session['user_id'],))
     user = cursor.fetchone()
 
@@ -284,7 +284,7 @@ def profile():
         session.clear()
         return redirect(url_for('index'))
 
-    # 📊 Στατιστικά με username (display μόνο)
+    # 📊 stats with username only
     cursor.execute(
         "SELECT * FROM game_statistics WHERE username = %s",
         (user['username'],)
@@ -292,7 +292,7 @@ def profile():
     stats = cursor.fetchall()
     cursor.close()
 
-    # 👤 πάντα owner (δικό του profile)
+    # 👤 only owner
     is_owner = True
 
     session['avatar'] = user.get('avatar')
@@ -439,7 +439,7 @@ def forgot_password():
         flash("Το email δεν βρέθηκε.")
         return redirect(url_for('forgot_password'))
 
-    # ✅ γλώσσα από DB (αυτό είναι το κλειδί)
+    # ✅ language from db
     lang = get_user_lang_by_email(email)
     tt = TRANSLATIONS.get(lang, TRANSLATIONS["el"])
 
@@ -483,7 +483,7 @@ def reset_password(token):
         flash("Μη έγκυρος σύνδεσμος.")
         return redirect(url_for('forgot_password'))
 
-    # ✅ γλώσσα από DB (με βάση το email)
+    # ✅ language from db for emails
     lang = get_user_lang_by_email(email)
     tt = TRANSLATIONS.get(lang, TRANSLATIONS["el"])
 
@@ -518,15 +518,15 @@ def edit_profile():
 
     if request.method == "POST":
         new_username = request.form.get("new_username")
-        old_username = user['username']   # ⬅️ ΕΔΩ
+        old_username = user['username']   # ⬅️ 
 
-        # 1️⃣ update στον πίνακα users
+        # 1️⃣ update users table
         cursor.execute(
             "UPDATE users SET username=%s WHERE id=%s",
             (new_username, user['id'])
         )
 
-        # 2️⃣ update στα στατιστικά
+        # 2️⃣ update stats
         cursor.execute(
             "UPDATE game_statistics SET username=%s WHERE username=%s",
             (new_username, old_username)
@@ -535,7 +535,7 @@ def edit_profile():
         mysql.connection.commit()
         cursor.close()
 
-        # ενημερώνουμε το session
+        # update session
         session['username'] = new_username
 
         return redirect(url_for("profile"))
@@ -559,13 +559,13 @@ def change_password():
         new_pw = request.form.get("new_password")
         confirm_pw = request.form.get("confirm_password")
 
-        # 🌍 Γλώσσα χρήστη από DB
+        # language user from db
         lang = (user.get("language") or "el")
         if lang not in ("el", "en"):
             lang = "el"
         tt = TRANSLATIONS.get(lang, TRANSLATIONS["el"])
 
-        # 1️⃣ Έλεγχος παλιού κωδικού
+        #  check old password
         if not bcrypt.checkpw(old_pw.encode(), user['password'].encode()):
             return f"""
             <script>
@@ -729,7 +729,7 @@ def upload_avatar():
 
 
 # -------------------------------------------------------------------
-# 4️⃣ Έλεγχος / Εγγραφή χρήστη
+# 4️⃣ Check/Sing up user/Login
 # -------------------------------------------------------------------
 @app.route('/check_user', methods=['POST'])
 def check_user():
@@ -783,11 +783,11 @@ def check_user():
         return "Λάθος κωδικός!", 401
 
     # ------------------------
-    # ✅ REGISTER (δεν υπάρχει user με αυτό το email)
+    # ✅ REGISTER 
     # ------------------------
 
     # 2) Μην αφήνεις ίδιο username να ξαναγραφτεί
-    # ✅ Αν υπάρχει ήδη email
+    # the email is already on database
     cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
     existing_email = cursor.fetchone()
     if existing_email:
@@ -805,7 +805,7 @@ def check_user():
     # 3) Hash password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    # 4) Γλώσσα από session (από welcome)
+    # 4) lang from session (from welcome page)
     lang = session.get('lang') or 'el'
     if lang not in ('el', 'en'):
         lang = 'el'
@@ -825,7 +825,7 @@ def check_user():
         return "Σφάλμα εγγραφής", 500
 
 
-    # 📧 Email καλωσορίσματος
+    # welcome email,email for successful sign up
     try:
         tt = TRANSLATIONS.get(lang, TRANSLATIONS["el"])
 
@@ -845,7 +845,7 @@ def check_user():
 
     
 
-    # 6) Πάρε το id και κάνε login
+    # 6) take id ->login
     cursor.execute("SELECT id FROM users WHERE email=%s", (email,))
     new_user = cursor.fetchone()
     cursor.close()
@@ -859,7 +859,7 @@ def check_user():
     return "steps"
 
 
-# 5️⃣ Βήματα εγγραφής (Steps)
+#  (Steps)
 # -------------------------------------------------------------------
 @app.route('/sign_up/step<int:step_number>')
 def sign_up_steps(step_number):
@@ -952,7 +952,7 @@ def complete_profile():
 
 
 # -------------------------------------------------------------------
-# 6️⃣ Υπενθυμίσεις μέσω email (Scheduler)
+# Scheduler from email(Scheduler)
 # -------------------------------------------------------------------
 def send_daily_reminders():
     with app.app_context():
@@ -999,7 +999,7 @@ def send_daily_reminders():
                     print("⚠️ Reminder email error:", e)
 
 
-# --- Εκκίνηση Scheduler ---
+# ---  Scheduler ---
 scheduler = BackgroundScheduler(timezone='Europe/Athens')
 scheduler.add_job(func=send_daily_reminders, trigger='cron', minute='*')
 
@@ -1050,7 +1050,7 @@ def menu():
 
 
 # -------------------------------------------------------------------
-# 8️⃣ Dashboard (στατιστικά παιχνιδιών)
+# 8️⃣ Dashboard (game stats)
 # -------------------------------------------------------------------
 @app.route('/dashboard')
 def dashboard():
@@ -1091,7 +1091,7 @@ def dashboard():
 
 
 # -------------------------------------------------------------------
-# 9️⃣ Αποθήκευση στατιστικών από παιχνίδι
+# add stats 
 # -------------------------------------------------------------------
 @app.route('/add_stat', methods=['POST'])
 def add_stat():
@@ -1127,7 +1127,7 @@ def add_stat():
 
 
 # -------------------------------------------------------------------
-# 🔟 Εκκίνηση παιχνιδιών
+# Start exercises
 # -------------------------------------------------------------------
 @app.route('/start/<int:exercise_num>', methods=['POST'])
 def start_exercise(exercise_num):
@@ -1154,7 +1154,7 @@ def start_exercise(exercise_num):
 
 
 
-    # 🧩 Ορισμός φακέλου και αρχείων για κάθε παιχνίδι
+    # Paths for the games
     game_paths = {
         1: os.path.join(BASE_GAME_FOLDER, "first_game", "first_game.py"),
         2: os.path.join(BASE_GAME_FOLDER, "second_game", "second_game_shape_moving.py"),
@@ -1181,7 +1181,7 @@ def start_exercise(exercise_num):
 
 
 # -------------------------------------------------------------------
-# 11️⃣ Εμφάνιση σελίδων ασκήσεων
+# Exercise's pages
 # -------------------------------------------------------------------
 @app.route('/exercise_1')
 def exercise_1():
@@ -1201,7 +1201,7 @@ def exercise_4():
 
 
 # -------------------------------------------------------------------
-# 12️⃣ API για ζωντανή ενημέρωση στατιστικών
+# 12️⃣ API for live add stats
 # -------------------------------------------------------------------
 @app.route('/api/stats')
 def api_stats():
@@ -1297,7 +1297,7 @@ def api_dashboard_stats():
     username = session['username']
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     
-    # 📊 Ομαδοποιεί όλες τις ασκήσεις με συνολικές φορές & μέσο σκορ
+    
     cursor.execute("""
         SELECT game_name,
                COUNT(*) AS plays,
@@ -1325,12 +1325,12 @@ def change_language():
     if new_lang not in ('el', 'en'):
         new_lang = 'el'
 
-    # κρατάμε προσωρινά πριν login, και μόνιμα μετά login
+    # session before  login, and always after login keep session.
     session['lang'] = new_lang
     session.permanent = True
     session.modified = True
 
-    # αν είναι logged in, γράψε DB (τελευταία επιλογή)
+    # if the user is logged in, write DB 
     if 'username' in session:
         cursor = mysql.connection.cursor()
         cursor.execute(
@@ -1346,13 +1346,13 @@ def change_language():
 
 @app.before_request
 def load_language():
-    # ✅ Αν είμαστε σε signup steps, ΜΗΝ πειράζεις session lang από DB
+    # ✅ The user is on signup steps, dont change the  session lang from DB
     if request.path.startswith("/sign_up/"):
         if session.get('lang') not in ('el', 'en'):
             session['lang'] = 'el'
         return
 
-    # ✅ Για όλες τις άλλες σελίδες, αν είναι logged in, DB -> session
+    # ✅ For all the pages , if the user is logged in, DB -> session
     if 'username' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute("SELECT language FROM users WHERE username=%s", (session['username'],))
@@ -1402,7 +1402,7 @@ def logout():
 
    
 # -------------------------------------------------------------------
-# 14️⃣ Εκκίνηση εφαρμογής
+# 1 App run 
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
