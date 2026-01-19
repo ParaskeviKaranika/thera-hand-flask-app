@@ -788,20 +788,20 @@ def check_user():
     if lang not in ('el', 'en'):
         lang = 'el'
 
-    # 5) Δημιουργία χρήστη
-try:
-    cursor.execute("""
-    INSERT INTO users (username, email, password, language, profile_completed, reminder)
-    VALUES (%s, %s, %s, %s, FALSE, 'no')
-""", (username, email, hashed, lang))
+    try:
+        cursor.execute("""
+            INSERT INTO users (username, email, password, language, profile_completed, reminder)
+            VALUES (%s, %s, %s, %s, FALSE, 'no')
+        """, (username, email, hashed, lang))
 
-    
-    mysql.connection.commit()
-except Exception as e:
-    mysql.connection.rollback()
-    print("❌ REGISTER ERROR:", e)
-    cursor.close()
-    return "Σφάλμα εγγραφής", 500
+        mysql.connection.commit()
+
+    except Exception as e:
+        mysql.connection.rollback()
+        print("❌ REGISTER ERROR:", e)
+        cursor.close()
+        return "Σφάλμα εγγραφής", 500
+
 
     # 📧 Email καλωσορίσματος
     try:
