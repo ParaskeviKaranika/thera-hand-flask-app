@@ -69,7 +69,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 
-mail = Mail(app)
+#mail = Mail(app)
 import threading
 import time
 
