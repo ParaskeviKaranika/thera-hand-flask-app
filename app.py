@@ -128,14 +128,13 @@ class PostgresConnection:
         self._conn = None
 
     def _connect(self):
-     self._conn = psycopg2.connect(self.dsn)
-     return self._conn
-
+        if self._conn is None or self._conn.closed != 0:
+            self._conn = psycopg2.connect(self.dsn)
+        return self._conn
 
     def cursor(self, cursorclass=None):
         conn = self._connect()
 
-        # Συμβατότητα με το ήδη υπάρχον code: cursor(MySQLdb.cursors.DictCursor)
         if cursorclass is not None:
             real = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             return TranslatingCursor(real)
@@ -144,17 +143,23 @@ class PostgresConnection:
         return TranslatingCursor(real)
 
     def commit(self):
-        self._connect().commit()
+        if self._conn:
+            self._conn.commit()
+
+    def rollback(self):
+        if self._conn:
+            self._conn.rollback()
 
     def ping(self, reconnect=False):
         try:
-            c = self.cursor()
-            c.execute("SELECT 1;")
-            c.close()
+            cur = self.cursor()
+            cur.execute("SELECT 1;")
+            cur.close()
         except Exception:
             if reconnect:
                 self._conn = None
                 self._connect()
+
 
 class PG:
     def __init__(self, dsn: str):
@@ -263,28 +268,41 @@ def index():
 # -------------------------------------------------------------------
 # 3️⃣ Προφίλ χρήστη
 # -------------------------------------------------------------------
-@app.route('/profile/<username>')
-def profile(username):
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
+
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+
+    # 🔑 Φόρτωσε χρήστη με ID (σταθερό)
+    cursor.execute("SELECT * FROM users WHERE id = %s", (session['user_id'],))
     user = cursor.fetchone()
 
-    # ✅ αν δεν υπάρχει χρήστης (π.χ. διαγράφηκε), κάνε redirect
     if not user:
         cursor.close()
         session.clear()
-        return redirect(url_for('index'))  # ή url_for('welcome')
+        return redirect(url_for('index'))
 
-    cursor.execute("SELECT * FROM game_statistics WHERE username = %s", (username,))
+    # 📊 Στατιστικά με username (display μόνο)
+    cursor.execute(
+        "SELECT * FROM game_statistics WHERE username = %s",
+        (user['username'],)
+    )
     stats = cursor.fetchall()
     cursor.close()
 
-    is_owner = ('username' in session and session['username'] == username)
+    # 👤 πάντα owner (δικό του profile)
+    is_owner = True
 
-    # ✅ safe
     session['avatar'] = user.get('avatar')
 
-    return render_template('profile.html', user=user, stats=stats, is_owner=is_owner)
+    return render_template(
+        'profile.html',
+        user=user,
+        stats=stats,
+        is_owner=is_owner
+    )
 
 def get_lang():
     return session.get("lang", "el")
@@ -520,7 +538,8 @@ def edit_profile():
         # ενημερώνουμε το session
         session['username'] = new_username
 
-        return redirect(url_for("profile", username=new_username))
+        return redirect(url_for("profile"))
+
 
     cursor.close()
     return render_template("edit_profile.html", user=user)
@@ -656,10 +675,11 @@ def change_theme():
 
     return """
     <script>
-        alert('Το θέμα άλλαξε επιτυχώς!');
-        window.location.href = '/profile/%s';
+    alert('Το θέμα άλλαξε επιτυχώς!');
+    window.location.href = '/profile';
     </script>
-    """ % session['username']
+"""
+
 
 @app.route("/api/theme", methods=["POST"])
 def api_theme():
@@ -691,7 +711,8 @@ def upload_avatar():
 
     avatar = request.files.get('avatar')
     if not avatar:
-        return redirect(url_for('profile', username=session['username']))
+      return redirect(url_for('profile'))
+
 
     filename = secure_filename(session['username'] + "_avatar.png")
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -704,7 +725,8 @@ def upload_avatar():
     mysql.connection.commit()
     cursor.close()
 
-    return redirect(url_for('profile', username=session['username']))
+    return redirect(url_for('profile'))
+
 
 # -------------------------------------------------------------------
 # 4️⃣ Έλεγχος / Εγγραφή χρήστη
@@ -1010,11 +1032,12 @@ def update_reminder():
     cursor.close()
 
     return """
-    <script>
-        alert("Οι ρυθμίσεις υπενθύμισης αποθηκεύτηκαν!");
-        window.location.href = '/profile/%s';
-    </script>
-    """ % session['username']
+   <script>
+    alert("Οι ρυθμίσεις υπενθύμισης αποθηκεύτηκαν!");
+    window.location.href = '/profile';
+   </script>
+"""
+
 
 # -------------------------------------------------------------------
 # 7️⃣ Menu Page
