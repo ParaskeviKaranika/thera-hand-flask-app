@@ -8,7 +8,8 @@ import psycopg2.extras
 import re
 
 import bcrypt #import bcrypt for the password hashing
-from flask_mail import Mail, Message  #import flask mail module
+from email_service import send_email
+
 from apscheduler.schedulers.background import BackgroundScheduler  #import background scheduler
 from datetime import datetime #import datetime module
 import pytz  #import pytz module for timezone handling
@@ -18,8 +19,6 @@ from werkzeug.utils import secure_filename  #import secure filename for file upl
 from itsdangerous import URLSafeTimedSerializer  #import url safe timed serializer for token generation
 from flask import url_for  #import url for generating urls
 from flask import flash   #import flash for flashing messages
-import smtplib  #import smtplib for sending emails
-from email.mime.text import MIMEText  #import mime text for email content
 from datetime import timedelta #import timedelta for session lifetime
 from reportlab.pdfgen import canvas  #import report lab for pdf generation
 from reportlab.lib.pagesizes import A4  #import a4 image for pdf size
@@ -67,43 +66,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # -------------------------------------------------------------------
 # Settings Email (μέσω Gmail)
 # -------------------------------------------------------------------
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USE_TLS'] = True
 
-app.config['MAIL_USERNAME'] = os.environ.get("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
-
-app.config['MAIL_DEFAULT_SENDER'] = ('TheraHand', 'handexercises.app@gmail.com')
-app.config["MAIL_TIMEOUT"] = 15
 
 
 mail = Mail(app)
 import threading
 import time
 
-def send_email_async(subject: str, recipients: list[str], body: str, attempts: int = 3, delay_sec: int = 2):
-    """
-    Στέλνει email σε background thread με retries.
-    Έτσι ΔΕΝ μπλοκάρει το request (άρα δεν έχουμε WORKER TIMEOUT στο Render).
-    """
-    def _worker():
-        with app.app_context():
-            last_err = None
-            for i in range(attempts):
-                try:
-                    msg = Message(subject=subject, recipients=recipients, body=body)
-                    mail.send(msg)
-                    app.logger.info("✅ Email sent to %s", recipients)
-                    return
-                except Exception as e:
-                    last_err = e
-                    app.logger.exception("⚠️ Email send failed (attempt %s/%s)", i + 1, attempts)
-                    time.sleep(delay_sec)
-            app.logger.error("❌ Email failed after %s attempts: %s", attempts, last_err)
 
-    threading.Thread(target=_worker, daemon=True).start()
 
 # -------------------------------------------------------------------
 # ✅ Settings Database (Postgres via DATABASE_URL)
@@ -472,14 +442,12 @@ def forgot_password():
 TheraHand Team
 """
 
-    # ✅ Send email async (no request blocking)
-    send_email_async(
+    send_email(
+    to_email=email,
     subject=subject,
-    recipients=[email],
-    body=message,
-    attempts=3,
-    delay_sec=2
+    html_content=message.replace("\n", "<br>")
 )
+
 
 
     flash(tt.get("reset_email_sent", "Reset email sent."))
@@ -615,14 +583,15 @@ def change_password():
         mysql.connection.commit()
 
         # ✅ Send email async (no request blocking)
-        send_email_async(
-       subject=tt.get("password_changed_subject", "🔐 Password changed"),
-       recipients=[user["email"]],
-       body=f"{tt.get('email_hi','Hi')} {user['username']},\n"
-         f"{tt.get('password_changed_body','Your password was changed successfully.')}",
-        attempts=3,
-         delay_sec=2
+        send_email(
+        to_email=user["email"],
+        subject=tt.get("password_changed_subject", "🔐 Password changed"),
+        html_content=f"""
+        <p>{tt.get('email_hi','Hi')} {user['username']},</p>
+        <p>{tt.get('password_changed_body','Your password was changed successfully.')}</p>
+    """
 )
+
 
 
         cursor.close()
@@ -832,17 +801,16 @@ def check_user():
     try:
         tt = TRANSLATIONS.get(lang, TRANSLATIONS["el"])
 
-        msg = Message(
-            subject=tt.get("welcome_subject", "Welcome to TheraHand 👋"),
-            recipients=[email],
-            body=f"""{tt.get('email_hi','Hi')} {username},
+        send_email(
+        to_email=email,
+        subject=tt.get("welcome_subject", "Welcome to TheraHand 👋"),
+        html_content=f"""
+        <p>{tt.get('email_hi','Hi')} {username},</p>
+        <p>{tt.get('welcome_body','Welcome to TheraHand!')}</p>
+         <p>TheraHand Team</p>
+    """
+)
 
-           {tt.get('welcome_body','Welcome to TheraHand! Your account was created successfully.')}
-
-          TheraHand Team
-             """
-        )
-        mail.send(msg)
         print(f"✅ Welcome email sent to {email}")
     except Exception as e:
         print("⚠️ Welcome email error:", e)
@@ -989,12 +957,15 @@ def send_daily_reminders():
                 tt = TRANSLATIONS.get(lang, TRANSLATIONS['el'])
 
                 try:
-                    msg = Message(
-                        subject=tt['email_reminder_subject'],
-                        recipients=[user['email']],
-                        body=f"{tt['email_hi']} {user['username']}!\n\n{tt['email_reminder_body']}"
-                    )
-                    mail.send(msg)
+                    send_email(
+                    to_email=user["email"],
+                    subject=tt['email_reminder_subject'],
+                    html_content=f"""
+                   <p>{tt['email_hi']} {user['username']}!</p>
+                   <p>{tt['email_reminder_body']}</p>
+    """
+)
+
                     print(f"✅ Reminder email sent to {user['username']} ({lang})")
                 except Exception as e:
                     print("⚠️ Reminder email error:", e)
