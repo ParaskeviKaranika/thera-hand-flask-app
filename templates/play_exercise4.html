@@ -110,6 +110,29 @@
   "game4_ex_close_only_thumb": {{ t.get("game4_ex_close_only_thumb","")|tojson }}
 }
 </script>
+  <nav class="navbar">
+
+  <!-- User profile / avatar icon -->
+  <div class="user-icon">
+    {% if 'username' in session %}
+      <a href="{{ url_for('profile', username=session['username']) }}" class="nav-profile-icon">
+        <img
+          src="{{ url_for('static', filename='uploads/' ~ (session.get('avatar') if session.get('avatar') else 'group_of_people.png')) }}"
+          class="nav-avatar"
+          alt="{{ t['profile_alt'] }}">
+      </a>
+    {% else %}
+      <a href="{{ url_for('profile', username=session['username']) }}">
+        <img src="/static/menu_images/User.png" alt="{{ t['user_alt'] }}" />
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Light/Dark theme toggle -->
+  <div class="theme-toggle-icon" onclick="toggleTheme()">
+    🌓
+  </div>
+</nav>
 
 <div class="wrap">
   <!-- Exercise title -->
