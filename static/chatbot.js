@@ -260,7 +260,7 @@ const knowledgeBase = [
     answer: {
       el: "Βεβαίως ! Θα σε βοηθήσω να καταλάβεις ακριβώς ποια κίνηση θα πρέπει να κάνεις για την άσκηση 3."
         + "Η άσκηση 3 σου ζητάει  να παίξεις ενα παιχνίδι όπως ακριβώς λειτουργεί ένα sliding puzzle ."
-        + "Κάθε φορά θα πρέπει να μετακινήσεις το κενό κουτί στο παζλ προς το κίτρινο κουτί.Κάθε φορά που θα μετακινείς 5 φορές οτ κενό κουτι στην θέση του κίτρινου ,θα πηγαίνεις στο επόμενο επίπεδο"
+        + "Κάθε φορά θα πρέπει να μετακινήσεις το κενό κουτί στο παζλ προς το κίτρινο κουτί.Κάθε φορά που θα μετακινείς 5 φορές το κενό κουτι στην θέση του κίτρινου ,θα πηγαίνεις στο επόμενο επίπεδο"
         + "Η κίνηση που χρειάζεται να κάνεις ώστε να μεταφέρεις το κενό στο κίτρινο είνσι να κλείνεις τον δείκτη και τον αντίχειρα μεταξύ τους ,δηλαδή να ακουμπάς τις κορυφές των δακτύλων μεταξύ τους "
         + "Ελπίζω να βοήθησα!!!",
       en: "Of course! I’ll help you understand exactly what movement you need for Exercise 3. Exercise 3 is like a sliding puzzle game. Each time, you must move the empty box in the puzzle toward the yellow box. Every time you move the empty box onto the yellow position 5 times, you go to the next level. The gesture you need is to touch the tip of your index finger and the tip of your thumb together (like pinching / the “OK” fingertip contact). I hope this helps!"
@@ -273,7 +273,7 @@ const knowledgeBase = [
     },
     answer: {
       el: "Τέλεια ,θα σε βοηθήσω να καταλάβεις πως θα παίξεις την άσκηση 3."
-        + "Στην άσκηση 3 , θα πρέπει να μετακινείς το κενό κουτί στο παζλ προς την θέση του κίτρινου μέχρι να βρεθεί πάνω στο κίτρινο.Στην συνέχεια το κίτρινο κουτί θααλλάζει θέσεις στο παζλ κάθε φορά που θα πηγαίνεις με το κενό κουτί πάνω του .Μετά θα πηγαίνεις στο επόμενο επίπεδο."
+        + "Στην άσκηση 3 , θα πρέπει να μετακινείς το κενό κουτί στο παζλ προς την θέση του κίτρινου μέχρι να βρεθεί πάνω στο κίτρινο.Στην συνέχεια το κίτρινο κουτί θα αλλάζει θέσεις στο παζλ κάθε φορά που θα πηγαίνεις με το κενό κουτί πάνω του .Μετά θα πηγαίνεις στο επόμενο επίπεδο."
         + "Προσπάθησε να μην πιέζεις τον ευατό σου ώστε να πετύχεις το σκόρ ,κάνε ενδιάμεσα διαλείμματα έαν νιώθεις ενόχληση ή κόπωση.",
       en: "Great! Here is how to play Exercise 3. You must move the empty box in the puzzle to the position of the yellow box until it lands on it. Then the yellow box changes position each time you reach it with the empty box. After that, you move on to the next level. Try not to push yourself—take short breaks if you feel discomfort or fatigue."
     }
@@ -312,7 +312,7 @@ const knowledgeBase = [
     },
     answer: {
       el: "Ναι ,θα σε βοηθήσω να αλλάξεις κωδικό.Στην οθόνη σου  πάνω αριστερά  βρίσκεται ένα κουμπί που όταν το πατήσεις θα σε ανακατυεθύνει στο προφίλ."
-        + "Στο κάτω μέρος της σελίδας υπάρχει η διαχείριση στο προφίλ όπου μπορείς να αλλάξεις τον κωδικό,θα σε ανακατευθύνει σε μια σελίδα όπου θα γίνει αλλαγή και συην συνέχεια θα λάβεις email επιβεβαίωσης στο email που έχεις συμπληρώσει."
+        + "Στο κάτω μέρος της σελίδας υπάρχει η διαχείριση στο προφίλ όπου μπορείς να αλλάξεις τον κωδικό,θα σε ανακατευθύνει σε μια σελίδα όπου θα γίνει αλλαγή και στην συνέχεια θα λάβεις email επιβεβαίωσης στο email που έχεις συμπληρώσει."
         + "Εάν χρειάζεσαι βοήθεια σε κάτι άλλο είτε για τις ασκήσεις είτε για ρυθμίσεις της εφαρμογής ,είμαι εδώ να βοηθήσω!!!",
       en: "Yes, I can help you change your password. On the top-left of the screen there is a button that takes you to your Profile. At the bottom of the profile page, you will find Profile Management where you can change your password. You will be redirected to a page to set the new password, and then you’ll receive a confirmation email to the email you used. If you need help with anything else (exercises or app settings), I’m here to help!"
     }
