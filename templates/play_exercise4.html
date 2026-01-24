@@ -163,7 +163,27 @@
   <!-- Optional status/debug text (can be empty during normal gameplay) -->
   <div id="status">OK</div>
 </div>
+<!-- ================= Bottom Navigation ================= -->
+<footer class="bottom-navbar">
 
+  <!-- Today / Planning -->
+  <a href="{{ url_for('today') }}" class="nav-item active">
+    <img src="{{ url_for('static', filename='menu_images/planning.png') }}" alt="{{ t['today'] }}">
+    <span>{{ t['today'] }}</span>
+  </a>
+
+  <!-- Statistics -->
+  <a href="{{ url_for('dashboard') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/statistic.png') }}" alt="{{ t['stats'] }}">
+    <span>{{ t['stats'] }}</span>
+  </a>
+
+  <!-- Games menu -->
+  <a href="{{ url_for('menu') }}" class="nav-item">
+    <img src="{{ url_for('static', filename='menu_images/games.png') }}" alt="{{ t['games'] }}">
+    <span>{{ t['games'] }}</span>
+  </a>
+</footer>
 <!-- MediaPipe Hands library -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.min.js"></script>
 
