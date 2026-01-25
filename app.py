@@ -873,9 +873,9 @@ def save_step1():
     if 'user_id' not in session:
         return redirect(url_for('index'))
     age = request.form.get('age')
-    goal = request.form.get('goal')
+    
     cursor = mysql.connection.cursor()
-    cursor.execute("UPDATE users SET age=%s, goal=%s WHERE id=%s", (age, goal, session['user_id']))
+    cursor.execute("UPDATE users SET age=%s  WHERE id=%s", (age,  session['user_id']))
     mysql.connection.commit()
     cursor.close()
     return redirect(url_for('sign_up_steps', step_number=2))
@@ -931,7 +931,7 @@ def complete_profile():
     type_ = request.form.get('type')
     frequency = request.form.get('frequency')
     duration = request.form.get('duration')
-    next_exercise = request.form.get('next_exercise')
+    
 
     cursor = mysql.connection.cursor()
     cursor.execute("""
@@ -941,10 +941,10 @@ def complete_profile():
             stage = %s,
             type = %s,
             frequency = %s,
-            duration = %s,
-            next_exercise = %s
+            duration = %s
+            
         WHERE id = %s
-    """, (stage, type_, frequency, duration, next_exercise, session['user_id']))
+    """, (stage, type_, frequency, duration, session['user_id']))
     mysql.connection.commit()
     cursor.close()
 
