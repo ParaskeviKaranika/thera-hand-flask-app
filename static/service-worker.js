@@ -2,7 +2,7 @@
    TheraHand – Service Worker
    =============================== */
 
-const CACHE_VERSION = "therahand-v1";
+const CACHE_VERSION = "therahand-v2";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 
 // 🔒 App Shell – σελίδες & assets που θες πάντα offline
@@ -74,9 +74,10 @@ self.addEventListener("fetch", (event) => {
 
   // 📁 Static αρχεία → cache first
   if (url.pathname.startsWith("/static/")) {
-    event.respondWith(cacheFirst(req));
-    return;
-  }
+  event.respondWith(staleWhileRevalidate(req));
+  return;
+}
+
 
   // 🌍 Pages → network first, fallback στο cache
   if (req.mode === "navigate") {
@@ -122,3 +123,19 @@ async function networkFirst(req) {
     );
   }
 }
+async function staleWhileRevalidate(req) {
+  const cache = await caches.open(STATIC_CACHE);
+  const cached = await cache.match(req);
+
+  const networkFetch = fetch(req)
+    .then((res) => {
+      if (res && res.status === 200) {
+        cache.put(req, res.clone());
+      }
+      return res;
+    })
+    .catch(() => cached);
+
+  return cached || networkFetch;
+}
+
