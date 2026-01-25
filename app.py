@@ -644,8 +644,10 @@ def delete_account():
     tt = TRANSLATIONS.get(lang, TRANSLATIONS["el"])
 
     # ❌ διαγραφή λογαριασμού
+    cursor.execute("DELETE FROM game_statistics WHERE username = %s", (username,))
     cursor.execute("DELETE FROM users WHERE username = %s", (username,))
     mysql.connection.commit()
+
     cursor.close()
 
     session.clear()
