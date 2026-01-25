@@ -135,11 +135,19 @@
 
 <!-- Game controls -->
 <div class="row">
-  <!-- Note: Text here can be overwritten by JS using i18n -->
-  <button id="startBtn">Έναρξη</button>
-  <button id="restartBtn" disabled>Restart</button>
-  <button id="stopBtn" disabled>Stop</button>
-</div>
+    <!-- Start button (text may be overridden by JS via i18n) -->
+    <button id="startBtn">{{ t.get("start_btn","Έναρξη") }}</button>
+
+    <!-- Restart button (enabled after start) -->
+    <button id="restartBtn" disabled>
+      {{ t.get("game4_restart","Restart") }}
+    </button>
+
+    <!-- Exit / Stop button (closes camera and ends exercise) -->
+    <button id="stopBtn" disabled>
+      {{ t.get("game4_exit","Exit") }}
+    </button>
+  </div>
 
 <!-- Optional status area (kept empty in the JS by default) -->
 <div id="status"></div>
