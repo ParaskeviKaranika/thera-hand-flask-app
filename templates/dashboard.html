@@ -299,6 +299,20 @@
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#39;");
     }
+    function isSuccess(result) {
+  const r = String(result || "").trim().toLowerCase();
+
+  return (
+    r.includes("win") ||
+    r.includes("completed") ||
+    r.includes("success") ||
+    r.includes("νίκη") ||
+    r.includes("νικη") ||
+    r.includes("επιτυχ") ||
+    r.includes("ολοκληρ")
+  );
+}
+
 
     function calculateSummary(stats) {
   const totalSessions = stats.length;
@@ -306,10 +320,8 @@
   const exercises = new Set(stats.map(s => s.game_name));
   const totalExercises = exercises.size;
 
-  const successResults = ["Win", "Completed", "Success"];
-  const successful = stats.filter(s =>
-    successResults.some(r => s.result.includes(r))
-  ).length;
+  const successful = stats.filter(s => isSuccess(s.result)).length;
+
 
   const successRate = totalSessions
     ? Math.round((successful / totalSessions) * 100)
@@ -327,9 +339,10 @@
   stats.forEach(s => {
     perExercise[s.game_name] ??= { ok: 0, total: 0 };
     perExercise[s.game_name].total++;
-    if (successResults.some(r => s.result.includes(r))) {
+    if (isSuccess(s.result)) {
       perExercise[s.game_name].ok++;
-    }
+}
+
   });
 
   let bestExercise = "—";
