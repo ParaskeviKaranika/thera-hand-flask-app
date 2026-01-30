@@ -228,6 +228,7 @@ TRANSLATIONS = {
 "email_placeholder": "Email",
 "password_placeholder": "Κωδικός",
 "signup": "Εγγραφή",
+"already_registered": "Έχεις ήδη λογαριασμό?",
 "login":"Σύνδεση",
 "forgot_password_link": "Ξέχασα τον κωδικό",
 
@@ -600,6 +601,7 @@ TRANSLATIONS = {
 "email_placeholder": "Email",
 "password_placeholder": "Password",
 "signup": "Sign up",
+"already_registered":"Already registered?",
 "login":"Login",
 "forgot_password_link": "Forgot password",
 
