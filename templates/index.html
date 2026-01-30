@@ -41,7 +41,8 @@
              placeholder="{{ t['password_placeholder'] }}" autocomplete="new-password" required >
 
       <!-- Submit button -->
-      <button type="submit" class="login-button">{{ t["continue"] }}</button>
+      <button type="submit"  name="action" value="signup"  class="signup-button">{{ t["signup"] }}</button>
+      <button type="submit" name="action" value="login" class="login-button">{{ t["login"]}}</button>
     </form>
 
     <!-- Area for login error / status messages -->
@@ -92,6 +93,8 @@
     // ===== Handle login / signup form submission =====
     document.getElementById('authForm').addEventListener('submit', async function(e) {
       e.preventDefault(); // Prevent default form submit (page reload)
+    const action = e.submitter?.value || "login";
+
 
       // Read user input values
       const username = document.getElementById('username').value;
@@ -103,17 +106,18 @@
         const response = await fetch('/check_user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password, email })
+          body: JSON.stringify({ username, password, email, action })
+
         });
 
         const result = await response.text(); // Backend returns plain text
 
         // Handle backend response
-        if (result === 'menu') {
+        if ( action=='login'&& result === 'menu') {
           // User fully registered → go to menu
           window.location.href = '/menu';
         }
-        else if (result === 'steps') {
+        else if ( action=='signup' && result === 'steps') {
           // User must complete profile steps
           window.location.href = '/sign_up/step1';
         }
