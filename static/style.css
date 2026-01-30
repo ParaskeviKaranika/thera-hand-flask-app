@@ -55,7 +55,7 @@ body {
   border: none;
   cursor: pointer;
 }
-.sign-button{
+.signup-button{
   width: 100%;         
   padding: 0.9rem;
   margin: 0.6rem 0;
@@ -67,6 +67,7 @@ body {
   outline: none;
   border: none;
   cursor: pointer;
+  margin-top: 0.2rem;
 }
 
 .forgot-link {
