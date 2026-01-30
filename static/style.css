@@ -69,7 +69,13 @@ body {
   cursor: pointer;
   margin-top: 0.2rem;
 }
+.hint-text{
+  font-size: 0.85rem;
+  color: #706868;
+  margin-top: 8px;
+  margin-bottom: -4px;
 
+}
 .forgot-link {
     text-align: right;
     color: #4a90e2;
