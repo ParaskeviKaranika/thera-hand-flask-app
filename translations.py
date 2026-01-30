@@ -227,7 +227,8 @@ TRANSLATIONS = {
 "username_placeholder": "Όνομα χρήστη",
 "email_placeholder": "Email",
 "password_placeholder": "Κωδικός",
-"continue": "Συνέχεια",
+"signup": "Εγγραφή",
+"login":"Σύνδεση",
 "forgot_password_link": "Ξέχασα τον κωδικό",
 
 "forgot_modal_title": "Επαναφορά Κωδικού",
@@ -598,7 +599,8 @@ TRANSLATIONS = {
 "username_placeholder": "Username",
 "email_placeholder": "Email",
 "password_placeholder": "Password",
-"continue": "Continue",
+"signup": "Sign up",
+"login":"Login",
 "forgot_password_link": "Forgot password",
 
 "forgot_modal_title": "Password Reset",
