@@ -42,6 +42,10 @@
 
       <!-- Submit button -->
       <button type="submit"  name="action" value="signup"  class="signup-button">{{ t["signup"] }}</button>
+      <p class="hint-text">
+      {{ t["already_registered"] }}
+     </p>
+
       <button type="submit" name="action" value="login" class="login-button">{{ t["login"]}}</button>
     </form>
 
@@ -125,10 +129,10 @@
           // Wrong password (translated message)
           document.getElementById('message').innerText = MSG_WRONG_PASSWORD;
         }
-        else {
-          // Any other message from backend
+        else if (result !== 'menu' && result !== 'steps') {
           document.getElementById('message').innerText = result;
-        }
+      }
+
       } catch (error) {
         // Network or server error
         console.error('Error:', error);
