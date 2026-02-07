@@ -385,8 +385,8 @@ TRANSLATIONS = {
         # today
         "hello": "Hello",
         "today_completed": "Today you completed",
-        "times_singular": "the exercise",
-        "times_plural": "the exercises",
+        "times_singular": "this exercise",
+        "times_plural": "this exercises",
         "you_played": "You played",
         "no_exercises_today": "You haven't done any exercises today!",
 
