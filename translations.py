@@ -78,6 +78,7 @@ TRANSLATIONS = {
 
         "difficulty_label": "Δυσκολία",
         "difficulty_low": "Χαμηλή",
+        "difficulty_high":"Υψηλή",
 
         # exercise 1 paragraphs
         "exercise_1_p1": "Σε αυτήν την άσκηση ο χρήστης καλείται να ανοιγοκλείνει την παλάμη του, σαν να προσπαθεί να πιάσει αντικείμενα στον αέρα. Κάθε φορά που ολοκληρώνει σωστά την κίνηση, στην οθόνη εξαφανίζεται ένα αστέρι που \"πιάνεται\" και αυξάνεται το σκορ.",
@@ -447,6 +448,7 @@ TRANSLATIONS = {
 
         "difficulty_label": "Difficulty",
         "difficulty_low": "Low",
+        "difficulty_high":"High",
 
         # exercise 1 paragraphs
         "exercise_1_p1": "In this exercise, the user is asked to open and close their palm, as if trying to catch objects in the air. Each time the movement is completed correctly, a star that is \"caught\" disappears from the screen and the score increases.",
