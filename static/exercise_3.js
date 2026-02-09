@@ -75,6 +75,10 @@
 }
 
 fitCanvasToDisplaySize();
+window.addEventListener('resize', () => {
+  fitCanvasToDisplaySize();
+  draw(); // ξανασχεδίασε
+});
 
 
   function makeSolvedBoard() {
@@ -274,27 +278,43 @@ function drawHUD() {
     ctx.fill();
   }
 
-  function drawInstructions() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, W, H);
+function drawInstructions() {
+  // ✅ Χρήση πραγματικών διαστάσεων canvas
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
+  
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
 
-    ctx.font = "24px Arial";
-    ctx.fillStyle = "white";
-    ctx.fillText(tr("welcome"), W / 2, 110);
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "white";
+  ctx.fillText(tr("welcome"), canvasWidth / 2, canvasHeight * 0.18);
 
-    ctx.font = "18px Arial";
-    const lines = [
-      tr("instructions_title"),
-      tr("inst_1"),
-      tr("inst_2"),
-      tr("goal_title"),
-      tr("goal_desc"),
-      "",
-      tr("press_start")
-    ];
+  ctx.font = "18px Arial";
+  const lines = [
+    tr("instructions_title"),
+    tr("inst_1"),
+    tr("inst_2"),
+    tr("goal_title"),
+    tr("goal_desc"),
+    "",
+    tr("press_start")
+  ];
+
+  let y = canvasHeight * 0.28;
+  const lineHeight = canvasHeight * 0.05;
+  
+  for (const line of lines) {
+    ctx.fillText(line, canvasWidth / 2, y);
+    y += lineHeight;
+  }
+
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+}
 
     let y = 170;
     for (const line of lines) {
