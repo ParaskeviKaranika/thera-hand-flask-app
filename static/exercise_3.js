@@ -75,10 +75,7 @@
 }
 
 fitCanvasToDisplaySize();
-window.addEventListener('resize', () => {
-  fitCanvasToDisplaySize();
-  draw(); // ξανασχεδίασε
-});
+
 
 
   function makeSolvedBoard() {
