@@ -74,7 +74,7 @@
   }
 }
 
-fitCanvasToDisplaySize();
+//fitCanvasToDisplaySize();
 
 
 
@@ -275,53 +275,38 @@ function drawHUD() {
     ctx.fill();
   }
 
-function drawInstructions() {
-  // ✅ Χρήση πραγματικών διαστάσεων canvas
-  const canvasWidth = canvas.width;
-  const canvasHeight = canvas.height;
-  
+ function drawInstructions() {
   ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillRect(0, 0, W, H);
 
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  ctx.font = "24px Arial";
+  ctx.font = "bold 28px Arial";
   ctx.fillStyle = "white";
-  ctx.fillText(tr("welcome"), canvasWidth / 2, canvasHeight * 0.18);
+  ctx.fillText(tr("welcome"), W / 2, 80);
 
-  ctx.font = "18px Arial";
+  ctx.font = "20px Arial";
   const lines = [
     tr("instructions_title"),
     tr("inst_1"),
     tr("inst_2"),
+    "",
     tr("goal_title"),
     tr("goal_desc"),
     "",
     tr("press_start")
   ];
 
-  let y = canvasHeight * 0.28;
-  const lineHeight = canvasHeight * 0.05;
-  
+  let y = 150;
   for (const line of lines) {
-    ctx.fillText(line, canvasWidth / 2, y);
-    y += lineHeight;
+    ctx.fillText(line, W / 2, y);
+    y += 35;
   }
 
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
 }
-
-    let y = 170;
-    for (const line of lines) {
-      ctx.fillText(line, W / 2, y);
-      y += 30;
-    }
-
-    ctx.textAlign = "left";
-    ctx.textBaseline = "alphabetic";
-  }
 
   function fitFontSize(text, maxWidth, startSize, minSize = 14, family = "Arial") {
   let size = startSize;
