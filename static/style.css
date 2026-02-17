@@ -122,6 +122,14 @@ body {
 .cancel-btn { background:#ddd; }
 .yes-btn { background:#48c774; color:white; }
 
+#message {
+  color: #d93025;   /* κόκκινο */
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 6px;
+}
+
+
 /* 🔹 Responsive Breakpoints */
 @media (min-width: 768px) {
   h1 {
