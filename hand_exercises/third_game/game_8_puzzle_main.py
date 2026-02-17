@@ -131,7 +131,7 @@ class Tile(pygame.sprite.Sprite):
         offset_x = (WIDTH - grid_width) // 2
 
         # Place grid near top (quarter of the screen offset) like your original code
-        offset_y = (HEIGHT - grid_height) // 4
+        offset_y = (HEIGHT - grid_height) // 4+60
 
         # Convert grid coordinates into screen coordinates
         self.rect.x = offset_x + self.x * TILESIZE
@@ -553,7 +553,7 @@ class Game:
                 grid_width = GAME_SIZE * TILESIZE
                 grid_height = GAME_SIZE * TILESIZE
                 offset_x = (WIDTH - grid_width) // 2
-                offset_y = (HEIGHT - grid_height) // 4
+                offset_y = (HEIGHT - grid_height) // 4+60
 
                 # Convert pixel coords to grid coords
                 tile_x = (x - offset_x) // TILESIZE
@@ -658,7 +658,7 @@ class Game:
         grid_width = GAME_SIZE * TILESIZE
         grid_height = GAME_SIZE * TILESIZE
         offset_x = (WIDTH - grid_width) // 2
-        offset_y = (HEIGHT - grid_height) // 4
+        offset_y = (HEIGHT - grid_height) // 4+60
 
         # Semi-transparent overlay behind the tiles
         overlay = pygame.Surface((grid_width, grid_height))
@@ -691,7 +691,7 @@ class Game:
             target_text_outline = font.render(self.tr("move_tile_to_yellow", tile=tile_label), True, BLACK)
 
             # Where to place text (below the grid)
-            text_y = offset_y + grid_height + 20
+            text_y = offset_y -80
 
             # Draw outline then main text to create a shadow effect
             self.screen.blit(moves_text_outline, (offset_x - 2, text_y - 2))
@@ -714,7 +714,7 @@ class Game:
         grid_width = GAME_SIZE * TILESIZE
         grid_height = GAME_SIZE * TILESIZE
         offset_x = (WIDTH - grid_width) // 2
-        offset_y = (HEIGHT - grid_height) // 4
+        offset_y = (HEIGHT - grid_height) // 4+60
 
         # Vertical lines
         for row in range(0, GAME_SIZE * TILESIZE + 1, TILESIZE):
