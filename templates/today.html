@@ -18,8 +18,10 @@
 <!-- ================= BODY WITH I18N DATA ATTRIBUTES ================= -->
 <body
   data-you-played="{{ t['you_played'] | e }}"
-  data-times-singular="{{ t['times_singular'] | e }}"
-  data-times-plural="{{ t['times_plural'] | e }}"
+  data-times-count-singular="{{ t['times_count_singular'] | e }}"
+  data-times-count-plural="{{ t['times_count_plural'] | e }}"
+  data-the-exercise-acc="{{ t['the_exercise_acc'] | e }}"
+  data-the-exercise="{{ t['the_exercise'] | e }}"
   data-today-label="{{ t['today'] | e }}"
   data-no-exercises-today="{{ t['no_exercises_today'] | e }}"
   data-lang="{{ lang }}"
@@ -54,7 +56,7 @@
       <p>
         {{ t['today_completed'] }}
         <strong>{{ total }}</strong>
-        {{ t['times_singular'] if total == 1 else t['times_plural'] }} 💪
+        {{ t['ex_singular'] if total == 1 else t['ex_plural'] }} 💪
       </p>
     </div>
 
@@ -74,7 +76,8 @@
             <span>
               {{ t['you_played'] }}
               {{ stat.plays }}
-              {{ t['times_singular'] if stat.plays == 1 else t['times_plural'] }}
+              {{ t['times_count_singular'] if stat.plays == 1 else t['times_count_plural'] }}
+              {{ t['the_exercise_acc'] if lang=='el' else t['the_exercise'] }}
             </span>
           </div>
         </div>
@@ -110,8 +113,10 @@
   <script>
     // ===== Read translated values from <body> data-attributes =====
     const YOU_PLAYED = document.body.dataset.youPlayed;
-    const TIMES_SINGULAR = document.body.dataset.timesSingular;
-    const TIMES_PLURAL = document.body.dataset.timesPlural;
+    const TIMES_COUNT_SINGULAR = document.body.dataset.timesCountSingular;
+    const TIMES_COUNT_PLURAL   = document.body.dataset.timesCountPlural;
+    const THE_EXERCISE_ACC     = document.body.dataset.theExerciseAcc;
+    const THE_EXERCISE         = document.body.dataset.theExercise;
     const TODAY_LABEL = document.body.dataset.todayLabel;
     const NO_EX_TODAY = document.body.dataset.noExercisesToday;
     const days = document.body.dataset.weekdays.split(",");
@@ -173,7 +178,8 @@
                   <h3>${stat.game_name}</h3>
                   <span>
                     ${YOU_PLAYED} ${stat.plays}
-                    ${stat.plays === 1 ? TIMES_SINGULAR : TIMES_PLURAL}
+                    ${stat.plays === 1 ? TIMES_COUNT_SINGULAR : TIMES_COUNT_PLURAL}
+                    ${lang === "el" ? THE_EXERCISE_ACC : THE_EXERCISE}
                   </span>
                 </div>
               </div>
