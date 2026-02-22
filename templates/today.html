@@ -54,10 +54,14 @@
 
       <!-- Total exercises completed today -->
       <p>
-        {{ t['today_completed'] }}
-        <strong>{{ total }}</strong>
-        {{ t['ex_singular'] if total == 1 else t['ex_plural'] }} 💪
-      </p>
+  {% if total == 0 %}
+    {{ t['no_exercises_completed'] }} 💪
+  {% elif total == 1 %}
+    {{ t['today_completed'] }} {{ t['ex_header_singular'] }} 💪
+  {% else %}
+    {{ t['today_completed'] }} {{ t['ex_header_plural'] }} 💪
+  {% endif %}
+</p>
     </div>
 
     <!-- Weekday progress indicator -->
