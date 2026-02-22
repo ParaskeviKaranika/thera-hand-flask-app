@@ -17,8 +17,9 @@ TRANSLATIONS = {
         "hello": "Γεια σου",
         "today_completed": "Σήμερα ολοκλήρωσες",
         # header: "Σήμερα ολοκλήρωσες Χ ασκήσεις"
-        "ex_singular": "άσκηση",
-        "ex_plural": "ασκήσεις",
+        "no_exercises_completed": "Δεν έχεις ολοκληρώσει κάποια άσκηση",
+        "ex_header_singular": "την άσκηση",
+        "ex_header_plural": "τις ασκήσεις",
 
 # per exercise: "Έπαιξες Χ φορές την άσκηση"
         "times_count_singular": "φορά",
@@ -393,8 +394,9 @@ TRANSLATIONS = {
         "hello": "Hello",
         "today_completed": "Today you completed",
        # header: "Today you completed X exercises"
-        "ex_singular": "exercise",
-        "ex_plural": "exercises",
+        "no_exercises_completed": "You haven't completed any exercise",
+        "ex_header_singular": "this exercise",
+        "ex_header_plural": "these exercises",
 
 # per exercise: "You played X times this exercise"
        "times_count_singular": "time",
